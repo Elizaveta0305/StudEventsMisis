@@ -1,0 +1,21 @@
+html {
+    box-sizing: border-box;
+}
+body {
+    font-family: var(--font-family);
+    background: var(--color-bg);
+    color: var(--color-text);
+    min-height: 100vh;
+    line-height: 1.5;
+    font-variant-numeric: lining-nums proportional-nums;
+    font-feature-settings: "lnum" 1, "pnum" 1;
+}
+header {
+    background: #fff;
+    color: #ffffff;
+    text-align: center;
+    height: 70px;
+}
+.main {
+    width: 100%;
+}

@@ -1,0 +1,12 @@
+.btn-login {
+    width: 100%;
+    padding: 10px 12px;
+    background: var(--color-primary);
+    color: #fff;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-weight: 600;
+}
+.btn-login:hover {
+    background: var(--color-primary-soft);
+}

@@ -1,0 +1,8 @@
+.logo img {
+    width: 111px;
+    height: 47px;
+}
+.header_inner {
+    display: flex;
+    align-items: center;
+}
