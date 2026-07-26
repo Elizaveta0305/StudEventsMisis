@@ -1,0 +1,17 @@
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# Логи
+*.log
+
+# Переменные окружения
+.env
+
+# Node.js
+node_modules/
+
+# Composer
+vendor/

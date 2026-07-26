@@ -4,5 +4,23 @@
 }
 .header_inner {
     display: flex;
+    justify-content: space-between;
     align-items: center;
+}
+header{
+    color: var(--color-text);
+}
+.header_links a {
+    color: var(--color-text);
+    text-decoration: none;
+    padding: 20px;
+}
+.header_links{
+    display: flex;
+    align-items: center;
+}
+.user-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
