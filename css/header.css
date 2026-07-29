@@ -6,9 +6,24 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: relative;
+    z-index: 1;
 }
 header{
     color: var(--color-text);
+    position: relative;
+    z-index: 0;
+}
+header::after{
+    content: "";
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 0;
+    width: 100vw;
+    height: 1px;
+    background: var(--color-border);
+    pointer-events: none;
 }
 .header_links a {
     color: var(--color-text);
@@ -19,8 +34,85 @@ header{
     display: flex;
     align-items: center;
 }
+.user-menu {
+    position: relative;
+}
 .user-link {
     display: flex;
     align-items: center;
     gap: 8px;
+    background: transparent;
+    border: none;
+    color: var(--color-text);
+    cursor: pointer;
+    padding: 20px;
+    font: inherit;
+}
+.user-link img {
+    display: block;
+}
+.user-dropdown {
+    position: absolute;
+    top: calc(100% + -10px);
+    right: 0;
+    background: #fff;
+    border: 1px solid var(--color-border);
+    box-shadow: 0 12px 32px rgba(2,6,23,0.08);
+    border-radius: 10px;
+    min-width: 180px;
+    display: flex;
+    flex-direction: column;
+    padding: 8px 0;
+    z-index: 20;
+    opacity: 0;
+    transform: translateY(-10px);
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 180ms ease, transform 180ms ease, visibility 180ms ease;
+}
+.user-dropdown a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 10px 16px;
+    color: var(--color-text);
+    text-decoration: none;
+    font-size: 14px;
+}
+.user-dropdown a .dropdown-icon {
+    width: 15px;
+    height: 15px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.user-dropdown a .dropdown-icon img,
+.user-dropdown a .dropdown-icon svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    color: #323232;
+    fill: currentColor;
+    filter: none;
+}
+.user-dropdown a.logout-link .dropdown-icon img {
+    filter: brightness(0) saturate(100%);
+}
+.user-dropdown a.logout-link:hover {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+.user-dropdown a.logout-link:hover .dropdown-icon img {
+    filter: none;
+}
+.user-dropdown a:hover {
+    background: #f3f4f6;
+}
+.user-menu.open .user-dropdown {
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+    pointer-events: auto;
 }
