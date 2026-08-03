@@ -68,5 +68,6 @@
             </div>
         </div>
     </main>
+    <script src="../js/ui.js"></script>
 </body>
 </html>

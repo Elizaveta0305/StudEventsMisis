@@ -12,7 +12,7 @@
 header{
     color: var(--color-text);
     position: relative;
-    z-index: 0;
+    z-index: 10;
 }
 header::after{
     content: "";
@@ -50,12 +50,13 @@ header::after{
 }
 .user-link img {
     display: block;
+    filter: var(--header-icon-filter);
 }
 .user-dropdown {
     position: absolute;
     top: calc(100% + -10px);
     right: 0;
-    background: #fff;
+    background: var(--color-surface-strong);
     border: 1px solid var(--color-border);
     box-shadow: 0 12px 32px rgba(2,6,23,0.08);
     border-radius: 10px;
@@ -63,7 +64,7 @@ header::after{
     display: flex;
     flex-direction: column;
     padding: 8px 0;
-    z-index: 20;
+    z-index: 50;
     opacity: 0;
     transform: translateY(-10px);
     visibility: hidden;
@@ -93,22 +94,28 @@ header::after{
     width: 100%;
     height: 100%;
     display: block;
-    color: #323232;
+    color: currentColor;
     fill: currentColor;
-    filter: none;
+    filter: var(--header-icon-filter);
 }
-.user-dropdown a.logout-link .dropdown-icon img {
-    filter: brightness(0) saturate(100%);
+.user-dropdown a:not(.logout-link):hover {
+    background: transparent;
+}
+.user-dropdown a.logout-link {
+    transition: background 180ms ease, color 180ms ease;
+}
+.user-dropdown a.logout-link .dropdown-icon img,
+.user-dropdown a.logout-link .dropdown-icon svg {
+    filter: var(--logout-icon-filter) !important;
+    transition: filter 180ms ease;
 }
 .user-dropdown a.logout-link:hover {
-    background: #fee2e2;
-    color: #b91c1c;
+    background: transparent;
+    color: inherit;
 }
-.user-dropdown a.logout-link:hover .dropdown-icon img {
-    filter: none;
-}
-.user-dropdown a:hover {
-    background: #f3f4f6;
+.user-dropdown a.logout-link:hover .dropdown-icon img,
+.user-dropdown a.logout-link:hover .dropdown-icon svg {
+    filter: var(--logout-icon-filter-hover) !important;
 }
 .user-menu.open .user-dropdown {
     opacity: 1;

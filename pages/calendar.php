@@ -23,8 +23,8 @@
                         Имя Пользователя <img src="../assets/ui/user.svg" alt="">
                     </button>
                     <div class="user-dropdown" id="userDropdown">
-                        <a href="#"><span>Личный кабинет</span><span class="dropdown-icon"><img src="../assets/ui/id_page.svg" alt=""></span></a>
-                        <a href="#"><span>Настройки</span><span class="dropdown-icon"><img src="../assets/ui/settings.svg" alt=""></span></a>
+                        <a href="../pages/profile.php"><span>Личный кабинет</span><span class="dropdown-icon"><img src="../assets/ui/id_page.svg" alt=""></span></a>
+                        <a href="../pages/settings.php"><span>Настройки</span><span class="dropdown-icon"><img src="../assets/ui/settings.svg" alt=""></span></a>
                         <a href="#" class="logout-link"><span>Выйти</span><span class="dropdown-icon"><img src="../assets/ui/logout.svg" alt=""></span></a>
                     </div>
                 </div>
@@ -73,9 +73,12 @@
                 Название мероприятия
                 <input type="text" id="eventTitle" name="title" placeholder="Название" />
             </label>
-            <label>
-                Дата
-                <input type="date" id="eventDate" name="date" />
+            <label class="date-field">
+                <span>Дата</span>
+                <div class="date-input-wrap">
+                    <input type="date" id="eventDate" name="date" class="date-input-custom" />
+                    <button type="button" class="date-trigger" aria-label="Открыть календарь"></button>
+                </div>
             </label>
             <label>
                 Описание
@@ -87,6 +90,7 @@
             </div>
         </form>
     </div>
+    <script src="../js/ui.js"></script>
     <script src="../js/calendar.js"></script>
 </body>
 </html>

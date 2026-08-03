@@ -188,6 +188,12 @@ document.addEventListener('DOMContentLoaded', function(){
     }
   });
 
+  function setupDateInputIcon(){
+    const dateInput = document.getElementById('eventDate');
+    if(!dateInput) return;
+    dateInput.classList.add('date-input-custom');
+  }
+
   if(eventForm){
     eventForm.addEventListener('submit', function(event){
       event.preventDefault();
@@ -207,19 +213,9 @@ document.addEventListener('DOMContentLoaded', function(){
     });
   }
 
-  const userToggle = document.getElementById('userToggle');
-  const userMenu = document.querySelector('.user-menu');
+  setupDateInputIcon();
 
-  if(userToggle && userMenu){
-    userToggle.addEventListener('click', function(event){
-      event.preventDefault();
-      userMenu.classList.toggle('open');
-    });
-
-    document.addEventListener('click', function(event){
-      if(!userMenu.contains(event.target)){
-        userMenu.classList.remove('open');
-      }
-    });
+  if(window.initUserDropdown){
+    window.initUserDropdown('#userToggle', '.user-menu');
   }
 });

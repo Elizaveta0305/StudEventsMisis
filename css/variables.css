@@ -7,8 +7,24 @@
     --color-border: #d1d5db;
     --color-muted: #6b7280;
     --color-surface: #f3f4f6;
-    --radius-sm: 6px;
-    --radius-md: 8px;
+    --color-bg-soft: #f8fafc;
+    --color-surface-strong: #ffffff;
+    --color-surface-muted: #eef2ff;
+    --color-border-soft: rgba(148, 163, 184, 0.16);
+    --color-text-muted: #475569;
+    --color-link: #1d4ed8;
+    --color-link-contrast: #ffffff;
+    --color-primary-soft-alt: rgba(59, 130, 246, 0.18);
+    --color-input-bg: #ffffff;
+    --color-toggle-bg: #d1d5db;
+    --icon-filter: brightness(0) saturate(100%);
+    --download-icon-filter: brightness(0) invert(1);
+    --header-icon-filter: none;
+    --logout-hover-bg: #fee2e2;
+    --logout-hover-color: #b91c1c;
+    --logout-icon-filter: brightness(0) saturate(100%) opacity(0.65);
+    --logout-icon-filter-hover: none;
+    --close-icon-filter: brightness(0) saturate(100%);
     --shadow: 0 8px 24px rgba(2, 6, 23, 0.08);
     --shadow-soft: 0 2px 8px rgba(6, 67, 240, 0.08);
     --container-width: 480px;
@@ -17,4 +33,37 @@
     --space-md: 1rem;
     --space-lg: 1.5rem;
     --space-xl: 2.5rem;
+    --radius-sm: 14px;
+    --radius-md: 26px;
+    --radius-lg: 36px;
+}
+
+:root.dark {
+    --color-bg: #0f172a;
+    --color-text: #f8fafc;
+    --color-primary: #60a5fa;
+    --color-primary-soft: #93c5fd;
+    --color-border: #334155;
+    --color-muted: #94a3b8;
+    --color-surface: #1e293b;
+    --color-bg-soft: #111827;
+    --color-surface-strong: #0f172a;
+    --color-surface-muted: #334155;
+    --color-text-muted: #cbd5e1;
+    --color-link: #93c5fd;
+    --color-link-contrast: #0f172a;
+    --color-primary-soft-alt: rgba(96, 165, 250, 0.12);
+    --color-input-bg: #0f172a;
+    --color-toggle-bg: #475569;
+    --color-border-soft: rgba(148, 163, 184, 0.12);
+    --icon-filter: brightness(0) invert(1);
+    --download-icon-filter: brightness(0) saturate(100%);
+    --header-icon-filter: brightness(0) invert(1);
+    --logout-hover-bg: rgba(255, 77, 83, 0.16);
+    --logout-hover-color: #111827;
+    --logout-icon-filter: brightness(0) invert(1);
+    --logout-icon-filter-hover: brightness(0) saturate(100%);
+    --close-icon-filter: brightness(0) invert(1);
+    --shadow: 0 10px 35px rgba(0, 0, 0, 0.35);
+    --shadow-soft: 0 2px 8px rgba(15, 23, 42, 0.25);
 }

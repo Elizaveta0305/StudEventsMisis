@@ -11,8 +11,8 @@ body {
     font-feature-settings: "lnum" 1, "pnum" 1;
 }
 header {
-    background: #fff;
-    color: #ffffff;
+    background: transparent;
+    color: var(--color-text);
     text-align: center;
     height: 70px;
 }
