@@ -107,6 +107,7 @@
     loadSiteTheme();
     initLogoutIconState();
     initDateInputBehavior();
+    initUserDropdown('#userToggle', '.user-menu');
   });
 
   window.initUserDropdown = initUserDropdown;

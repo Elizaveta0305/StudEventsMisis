@@ -1,4 +1,10 @@
+.logo {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+}
 .logo img {
+    display: block;
     width: 111px;
     height: 47px;
 }

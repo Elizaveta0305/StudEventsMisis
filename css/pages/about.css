@@ -1,0 +1,121 @@
+.about-page {
+    padding: 40px 0;
+}
+
+.about-header {
+    margin-bottom: 60px;
+}
+
+.about-title {
+    font-size: 32px;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: 12px;
+}
+
+.about-subtitle {
+    font-size: 16px;
+    color: var(--color-text-secondary);
+    margin: 0;
+}
+
+.about-section {
+    margin-bottom: 50px;
+}
+
+.about-section-header {
+    margin-bottom: 24px;
+}
+
+.about-section-title {
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0 0 16px 0;
+}
+
+.about-section-content {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--color-text);
+}
+
+.about-section-content p {
+    margin: 0 0 16px 0;
+}
+
+.about-section-content p:last-child {
+    margin-bottom: 0;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+}
+
+.feature-card {
+    padding: 24px;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-soft);
+    border-radius: 10px;
+    transition: all 200ms ease;
+}
+
+.feature-card:hover {
+    background: var(--color-surface-strong);
+    border-color: var(--color-border);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.feature-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--color-text);
+    margin-bottom: 8px;
+}
+
+.feature-description {
+    font-size: 14px;
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+    margin: 0;
+}
+
+.steps-list {
+    list-style: decimal;
+    padding-left: 24px;
+    font-size: 15px;
+    line-height: 1.8;
+    color: var(--color-text);
+}
+
+.steps-list li {
+    margin-bottom: 12px;
+}
+
+@media (max-width: 768px) {
+    .about-page {
+        padding: 24px 0;
+    }
+
+    .about-title {
+        font-size: 24px;
+    }
+
+    .about-section-title {
+        font-size: 18px;
+    }
+
+    .features-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .about-header {
+        margin-bottom: 40px;
+    }
+
+    .about-section {
+        margin-bottom: 36px;
+    }
+}

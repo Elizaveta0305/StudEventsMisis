@@ -214,8 +214,4 @@ document.addEventListener('DOMContentLoaded', function(){
   }
 
   setupDateInputIcon();
-
-  if(window.initUserDropdown){
-    window.initUserDropdown('#userToggle', '.user-menu');
-  }
 });

@@ -1,7 +1,5 @@
 (function(){
-  const themeLight = document.getElementById('themeLight');
-  const themeDark = document.getElementById('themeDark');
-  const themeToggleInputs = [themeLight, themeDark];
+  const themeSelect = document.getElementById('themeSelect');
 
   function applyTheme(theme){
     const root = document.documentElement;
@@ -11,10 +9,8 @@
   function loadTheme(){
     const saved = localStorage.getItem('siteTheme') || 'light';
     applyTheme(saved);
-    if(saved === 'dark'){
-      themeDark.checked = true;
-    } else {
-      themeLight.checked = true;
+    if(themeSelect){
+      themeSelect.value = saved;
     }
   }
 
@@ -22,20 +18,15 @@
     localStorage.setItem('siteTheme', theme);
   }
 
-  themeToggleInputs.forEach(input => {
-    if(!input) return;
-    input.addEventListener('change', () => {
-      if(input.checked){
-        applyTheme(input.value);
-        saveTheme(input.value);
-      }
+  if(themeSelect){
+    themeSelect.addEventListener('change', function(){
+      const selected = themeSelect.value;
+      applyTheme(selected);
+      saveTheme(selected);
     });
-  });
+  }
 
   document.addEventListener('DOMContentLoaded', function(){
     loadTheme();
-    if(window.initUserDropdown){
-      window.initUserDropdown('#userToggle', '.user-menu');
-    }
   });
 })();
