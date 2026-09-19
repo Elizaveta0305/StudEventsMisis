@@ -6,7 +6,7 @@
             </a>
             <span class="header_links">
                 <a href="./register.php">Мероприятия</a>
-                <a href="../index.php">Аналитика</a>
+                <a href="./analytics.php">Аналитика</a>
                 <a href="./calendar.php">Календарь</a>
                 <div class="user-menu">
                     <button type="button" class="user-link" id="userToggle">
