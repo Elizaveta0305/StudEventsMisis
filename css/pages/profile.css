@@ -289,6 +289,182 @@
 .event-card-link:hover{
     opacity: 0.95;
 }
+.student-analytics{
+    margin-top: 36px;
+    padding: 26px;
+    border: 1px solid var(--color-border);
+    border-radius: 18px;
+    background: var(--color-surface-strong);
+    box-shadow: var(--shadow);
+}
+.student-analytics-heading{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+.student-analytics-eyebrow{
+    margin: 0 0 7px;
+    color: var(--color-primary);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: .08em;
+}
+.student-analytics-heading h2{
+    margin: 0;
+    color: var(--color-text);
+    font-size: 25px;
+    font-weight: 800;
+}
+.student-analytics-period{
+    display: grid;
+    gap: 6px;
+    min-width: 160px;
+    color: var(--color-muted);
+    font-size: 12px;
+    font-weight: 700;
+}
+.student-analytics-period select{
+    appearance: none;
+    min-height: 40px;
+    padding: 0 36px 0 12px;
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    background: var(--color-surface-strong);
+    color: var(--color-text);
+    font: inherit;
+    background-image:
+        linear-gradient(45deg, transparent 45%, var(--color-text) 45%, var(--color-text) 55%, transparent 55%),
+        linear-gradient(135deg, transparent 45%, var(--color-text) 45%, var(--color-text) 55%, transparent 55%);
+    background-repeat: no-repeat;
+    background-position: right 18px center, right 12px center;
+    background-size: 6px 6px;
+}
+.student-analytics-period .custom-select-trigger{
+    min-height:40px;
+    padding:0 12px;
+    border-radius:10px;
+    background:var(--color-surface-strong);
+    font-size:12px;
+}
+.student-analytics-kpis{
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 16px;
+}
+.student-analytics-kpi{
+    display: grid;
+    gap: 8px;
+    min-height: 116px;
+    padding: 16px;
+    border: 1px solid var(--color-border-soft);
+    border-radius: 12px;
+    background: var(--color-bg-soft);
+}
+.student-analytics-kpi > span{
+    color: var(--color-muted);
+    font-size: 12px;
+    font-weight: 700;
+}
+.student-analytics-kpi strong{
+    color: var(--color-text);
+    font-size: 28px;
+    line-height: 1;
+}
+.student-analytics-kpi small{
+    color: var(--color-muted);
+    font-size: 11px;
+}
+.student-analytics-kpi-highlight{
+    border-color: rgba(6,67,240,.2);
+    background: var(--color-surface-muted);
+}
+.student-analytics-charts{
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr);
+    gap: 16px;
+}
+.student-analytics-panel{
+    min-width: 0;
+    padding: 18px;
+    border: 1px solid var(--color-border-soft);
+    border-radius: 12px;
+    background: var(--color-bg-soft);
+}
+.student-analytics-panel-heading h3{
+    margin: 0;
+    color: var(--color-text);
+    font-size: 16px;
+    font-weight: 800;
+}
+.student-analytics-panel-heading p{
+    margin: 5px 0 0;
+    color: var(--color-muted);
+    font-size: 12px;
+}
+.student-activity-chart-wrap{
+    height: 220px;
+    margin-top: 12px;
+}
+.student-activity-chart-wrap canvas{
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+.student-types-content{
+    display: grid;
+    grid-template-columns: minmax(130px, .8fr) minmax(150px, 1fr);
+    align-items: center;
+    gap: 10px;
+    min-height: 220px;
+}
+.student-donut-wrap{
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1;
+    max-width: 200px;
+    margin-inline: auto;
+}
+.student-donut-wrap canvas{
+    width: 100%;
+    height: 100%;
+}
+.student-donut-wrap > strong{
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    color: var(--color-text);
+    font-size: 23px;
+}
+.student-types-legend{
+    display: grid;
+    gap: 9px;
+}
+.student-types-legend > div{
+    display: grid;
+    grid-template-columns: 9px minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 8px;
+    color: var(--color-muted);
+    font-size: 12px;
+}
+.student-types-legend i{
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+}
+.student-types-legend strong{
+    color: var(--color-text);
+    font-size: 13px;
+}
+.student-type-science{background:#0643f0}
+.student-type-sport{background:#10b981}
+.student-type-public{background:#f59e0b}
+.student-type-creative{background:#a855f7}
+.student-type-city{background:#ef4444}
 @media(max-width: 960px){
     .profile-overview{
         grid-template-columns: 1fr;

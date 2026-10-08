@@ -5,7 +5,7 @@
                 <img src="../assets/logo/main_logo.png" alt="Logo">
             </a>
             <span class="header_links">
-                <a href="./register.php">Мероприятия</a>
+                <a href="#upcomingEventsModal" id="upcomingEventsTrigger" aria-haspopup="dialog" aria-controls="upcomingEventsModal">Мероприятия</a>
                 <a href="./analytics.php">Аналитика</a>
                 <a href="./calendar.php">Календарь</a>
                 <div class="user-menu">
@@ -22,4 +22,18 @@
         </div>
     </header>
 </div>
+<div class="upcoming-events-overlay" id="upcomingEventsOverlay"></div>
+<section class="upcoming-events-modal" id="upcomingEventsModal" role="dialog" aria-modal="true" aria-labelledby="upcomingEventsTitle" aria-hidden="true">
+    <div class="upcoming-events-header">
+        <div>
+            <h2 id="upcomingEventsTitle">Ближайшие мероприятия</h2>
+        </div>
+        <button type="button" class="upcoming-events-close" id="closeUpcomingEvents" aria-label="Закрыть">
+            <img src="../assets/ui/close.svg" alt="">
+        </button>
+    </div>
+    <div class="upcoming-events-list" id="upcomingEventsList" aria-live="polite"></div>
+    <a class="upcoming-events-calendar-link" href="./calendar.php">Открыть календарь</a>
+</section>
 <script src="../js/ui.js"></script>
+<script src="../js/upcoming-events.js"></script>

@@ -4,14 +4,11 @@
       id: 1,
       name: 'Алексей Петров',
       faculty: 'ФАИТ',
-      group: 'АТ-24',
       email: 'alexey.petrov@example.com',
       activity: 82,
       events: 5,
       attendance: 76,
       avgScore: 4.7,
-      groupSize: 28,
-      groupActive: 20,
       status: 'Активен',
       records: [
         { title: 'Городская олимпиада', type: 'Научное', date: '12.05.2026', role: 'Участник' },
@@ -23,14 +20,11 @@
       id: 2,
       name: 'Марина Иванова',
       faculty: 'ИЭФ',
-      group: 'МТ-21',
       email: 'marina.ivanova@example.com',
       activity: 68,
       events: 4,
       attendance: 71,
       avgScore: 4.5,
-      groupSize: 26,
-      groupActive: 18,
       status: 'Активен',
       records: [
         { title: 'Конкурс научных проектов', type: 'Научное', date: '07.05.2026', role: 'Участник' },
@@ -42,14 +36,11 @@
       id: 3,
       name: 'Дмитрий Смирнов',
       faculty: 'ФММТ',
-      group: 'Э-22',
       email: 'dmitry.smirnov@example.com',
       activity: 54,
       events: 3,
       attendance: 49,
       avgScore: 4.1,
-      groupSize: 31,
-      groupActive: 15,
       status: 'Под наблюдением',
       records: [
         { title: 'День студента', type: 'Общественное', date: '10.05.2026', role: 'Участник' },
@@ -60,14 +51,11 @@
       id: 4,
       name: 'Екатерина Белова',
       faculty: 'ФАИТ',
-      group: 'ИП-23',
       email: 'ekaterina.belova@example.com',
       activity: 89,
       events: 6,
       attendance: 92,
       avgScore: 4.9,
-      groupSize: 24,
-      groupActive: 22,
       status: 'Активен',
       records: [
         { title: 'Марафон программирования', type: 'Научное', date: '27.05.2026', role: 'Участник' },
@@ -80,14 +68,11 @@
       id: 5,
       name: 'Иван Кузнецов',
       faculty: 'ИЭФ',
-      group: 'Э-23',
       email: 'ivan.kuznetsov@example.com',
       activity: 63,
       events: 2,
       attendance: 58,
       avgScore: 4.3,
-      groupSize: 30,
-      groupActive: 17,
       status: 'Активен',
       records: [
         { title: 'Выставка проектов', type: 'Научное', date: '11.05.2026', role: 'Участник' },
@@ -98,14 +83,11 @@
       id: 6,
       name: 'София Лебедева',
       faculty: 'ИЭФ',
-      group: 'МТ-22',
       email: 'sofia.lebedeva@example.com',
       activity: 77,
       events: 5,
       attendance: 86,
       avgScore: 4.8,
-      groupSize: 27,
-      groupActive: 23,
       status: 'Активен',
       records: [
         { title: 'Школа лидеров', type: 'Общественное', date: '19.05.2026', role: 'Участник' },
@@ -167,10 +149,7 @@
     const selectedFaculty = facultyFilter.value;
 
     return students.filter(student => {
-      const matchesSearch = !search ||
-        student.name.toLowerCase().includes(search) ||
-        student.group.toLowerCase().includes(search) ||
-        student.faculty.toLowerCase().includes(search);
+      const matchesSearch = !search || student.name.toLowerCase().includes(search);
 
       const matchesFaculty = selectedFaculty === 'all' || student.faculty === selectedFaculty;
 
@@ -276,10 +255,6 @@
         <div class="info-card">
           <label>Факультет</label>
           <strong>${student.faculty}</strong>
-        </div>
-        <div class="info-card">
-          <label>Группа</label>
-          <strong>${student.group}</strong>
         </div>
         <div class="info-card">
           <label>Средний балл</label>

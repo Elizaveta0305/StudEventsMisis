@@ -1,8 +1,18 @@
 (function(){
-  const events = [];
+  const storageKey = 'studEvents.events.v1';
+  let events = loadEvents();
   let current = new Date();
   current = new Date(current.getFullYear(), current.getMonth(), 1);
   let calendarContainer = null;
+
+  function loadEvents(){
+    try{
+      const storedEvents = JSON.parse(localStorage.getItem(storageKey) || '[]');
+      return Array.isArray(storedEvents) ? storedEvents : [];
+    }catch{
+      return [];
+    }
+  }
 
   function formatDateKey(year, month, day){
     return `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
@@ -160,6 +170,11 @@
     closeModal,
     addEvent(event){
       events.push(event);
+      try{
+        localStorage.setItem(storageKey, JSON.stringify(events));
+      }catch{
+      }
+      window.dispatchEvent(new CustomEvent('studEvents:updated'));
       build();
     }
   };

@@ -8,3 +8,5 @@
 @import "pages/calendar.css";
 @import "pages/profile.css";
 @import "footer.css";
+@import "components/upcoming-events.css";
+@import "components/custom-select.css?v=2";
