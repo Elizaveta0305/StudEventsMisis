@@ -13,7 +13,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Remove files not for the server
-        run: rm -rf .git .github README.md
+        run: rm -rf .git .github .gitignore README.md
 
       - name: Install lftp
         run: sudo apt-get update && sudo apt-get install -y lftp
@@ -28,9 +28,11 @@ jobs:
           set ftp:ssl-force true
           set ftp:ssl-protect-data true
           set ssl:verify-certificate no
+          set ssl:max-protocol TLS1.2
           set ftp:use-site-chmod false
           set net:max-retries 3
           set net:timeout 20
+          debug 3
           mirror -R --verbose --parallel=1 --no-perms ./ /
           bye
           EOF
