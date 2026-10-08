@@ -29,7 +29,8 @@ jobs:
           set ftp:ssl-protect-data false
           set ssl:verify-certificate no
           set ftp:use-site-chmod false
-          set net:max-retries 2
+          set net:socket-maxseg 1000
+          set net:max-retries 3
           set net:timeout 20
           mirror -R --verbose --parallel=1 --no-perms ./ /
           bye
