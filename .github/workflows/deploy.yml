@@ -26,13 +26,11 @@ jobs:
         run: |
           lftp -u "$FTP_USERNAME","$FTP_PASSWORD" "$FTP_SERVER" <<'EOF'
           set ftp:ssl-force true
-          set ftp:ssl-protect-data true
+          set ftp:ssl-protect-data false
           set ssl:verify-certificate no
-          set ssl:max-protocol TLS1.2
           set ftp:use-site-chmod false
-          set net:max-retries 3
+          set net:max-retries 2
           set net:timeout 20
-          debug 3
           mirror -R --verbose --parallel=1 --no-perms ./ /
           bye
           EOF
