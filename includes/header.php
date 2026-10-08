@@ -2,7 +2,7 @@
     <header>
         <div class="header_inner">
             <a href="./calendar.php" class="logo" aria-label="Перейти в календарь">
-                <img src="../assets/logo/main_logo.png" alt="Logo">
+                <img src="../assets/logo/misis_logo.png" alt="Logo">
             </a>
             <span class="header_links">
                 <a href="#upcomingEventsModal" id="upcomingEventsTrigger" aria-haspopup="dialog" aria-controls="upcomingEventsModal">Мероприятия</a>

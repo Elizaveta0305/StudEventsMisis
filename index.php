@@ -13,7 +13,7 @@
                 <div class="auth-wrapper">
                     <div class="auth-header">
                         <div class="welcome-text">Добро пожаловать на сервис учета мероприятий</div>
-                        <img src="./assets/logo/main_logo.png" alt="logo" class="auth-logo">
+                        <img src="./assets/logo/misis_logo.png" alt="logo" class="auth-logo">
                     </div>
                     <div class="auth-box">
                         <div class="text-auth">Авторизация</div>
