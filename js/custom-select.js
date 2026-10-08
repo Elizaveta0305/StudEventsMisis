@@ -118,6 +118,6 @@
   }
 
   document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('.select-field select, .faculty-analytics-faculty-control select, .faculty-analytics-period-control select, .student-analytics-period select').forEach(enhanceSelect);
+    document.querySelectorAll('.select-field select, .faculty-analytics-faculty-control select, .faculty-analytics-period-control select, .student-analytics-period select, .settings-select').forEach(enhanceSelect);
   });
 })();

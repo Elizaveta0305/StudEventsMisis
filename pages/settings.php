@@ -5,7 +5,8 @@
     <title>Настройки</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/pages/settings.css">
+    <link rel="stylesheet" href="../css/pages/settings.css?v=3">
+    <link rel="stylesheet" href="../css/components/custom-select.css?v=3">
     <link rel="icon" type="image/x-icon" href="../assets/logo/favicon.svg">
 </head>
 <body>
@@ -33,24 +34,10 @@
                     </label>
                 </div>
             </section>
-            <section class="settings-panel">
-                <div class="settings-row">
-                    <div class="settings-label-group">
-                        <div class="settings-row-title">Внешний вид</div>
-                        <p class="settings-row-text">Выберите тему оформления интерфейса.</p>
-                    </div>
-
-                    <label class="settings-select-wrap" aria-label="Выбор темы интерфейса">
-                        <select id="themeSelectSecondary" class="settings-select">
-                            <option value="light">Светлая</option>
-                            <option value="dark">Тёмная</option>
-                        </select>
-                    </label>
-                </div>
-            </section>
         </main>
     </div>
 <?php include '../includes/footer.php'; ?>
     <script src="../js/settings.js"></script>
+    <script src="../js/custom-select.js?v=4"></script>
 </body>
 </html>
