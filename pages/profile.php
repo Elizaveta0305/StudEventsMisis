@@ -20,7 +20,7 @@
             <div class="profile-overview">
                 <section class="profile-card">
                     <div class="profile-card-header">
-                        <div class="profile-avatar">А</div>
+                        <div class="profile-avatar">Е</div>
                         <div>
                             <div class="profile-name">Елизавета Розенко</div>
                             <div class="profile-subtitle">ФАИТ · Группа ИТ-23</div>
@@ -40,10 +40,6 @@
                             <strong>ФАИТ</strong>
                         </div>
                         <div class="profile-info-item">
-                            <span>Группа</span>
-                            <strong>ИТ-23</strong>
-                        </div>
-                        <div class="profile-info-item">
                             <span>Телефон</span>
                             <strong>+7 (960) 621-76-28</strong>
                         </div>
@@ -61,7 +57,6 @@
                         </div>
                     </div>
                     <div class="profile-quick-links">
-                        <a href="#studentAnalytics" class="profile-link">Моя аналитика</a>
                         <a href="../pages/calendar.php" class="profile-link">Посмотреть календарь</a>
                         <a href="#" class="profile-link profile-link-secondary">Редактировать профиль</a>
                     </div>

@@ -14,7 +14,7 @@
     display: grid;
     grid-template-columns: 1.6fr 1fr;
     gap: 24px;
-    align-items: start;
+    align-items: stretch;
 }
 .profile-card,
 .profile-aside{
@@ -52,6 +52,7 @@
 .profile-info-grid{
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-rows: 1fr;
     gap: 16px;
 }
 .profile-info-item{

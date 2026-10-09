@@ -33,6 +33,7 @@
     font:inherit;
     text-align:left;
     cursor:pointer;
+    transition:background-color 180ms ease,border-color 180ms ease,color 180ms ease,box-shadow 180ms ease;
 }
 
 .custom-select-trigger:focus-visible{
