@@ -82,6 +82,43 @@
     color: var(--color-muted);
     font-size: 10px;
 }
+.admin-event-management{
+    display: grid;
+    grid-template-columns: minmax(220px, 1fr) auto;
+    align-items: end;
+    gap: 14px;
+    margin-bottom: 22px;
+    padding: 16px;
+    border: 1px solid var(--color-border-soft);
+    border-radius: 12px;
+    background: var(--color-bg-soft);
+}
+.admin-event-management-actions{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px;
+}
+.admin-event-management-actions .admin-button{
+    min-height: 42px;
+    padding-inline: 14px;
+    font-size: 13px;
+}
+.admin-button:disabled{
+    border-color: var(--color-border);
+    background: var(--color-surface);
+    color: var(--color-muted);
+    cursor: not-allowed;
+    opacity: .7;
+}
+.admin-button-danger{
+    border-color: #dc2626;
+    background: #dc2626;
+    color: #fff;
+}
+.admin-event-management .custom-select-trigger{
+    background: var(--color-surface-strong);
+}
 .admin-form-grid{
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -300,7 +337,8 @@
     background: var(--color-surface-strong);
     color: var(--color-text);
 }
-.admin-field input[type="date"]::-webkit-calendar-picker-indicator{
+.admin-field input[type="date"]::-webkit-calendar-picker-indicator,
+.admin-field input[type="time"]::-webkit-calendar-picker-indicator{
     filter: var(--icon-filter);
     cursor: pointer;
 }
@@ -327,10 +365,36 @@
 }
 .admin-form-actions{
     display: flex;
+    align-items: center;
     justify-content: flex-end;
+    gap: 16px;
     margin-top: 20px;
     padding-top: 18px;
     border-top: 1px solid var(--color-border-soft);
+}
+.admin-event-form-status{
+    flex: 1;
+    color: var(--color-muted);
+    font-size: 12px;
+}
+.admin-form-status{
+    flex: 1;
+    color: var(--color-muted);
+    font-size: 12px;
+}
+.admin-form-status-success{
+    color: var(--color-success);
+}
+.admin-form-status-warning{
+    color: var(--color-warning);
+}
+.admin-form-status-error{
+    color: var(--color-error);
+}
+.admin-document-hint{
+    color: var(--color-muted);
+    font-size: 11px;
+    font-weight: 500;
 }
 .admin-button{
     min-height: 44px;
@@ -368,6 +432,12 @@
     .admin-section{
         padding: 18px;
     }
+    .admin-event-management{
+        grid-template-columns: minmax(0, 1fr);
+    }
+    .admin-event-management-actions{
+        justify-content: flex-start;
+    }
 }
 @media(max-width: 560px){
     .admin-form-grid{
@@ -382,5 +452,13 @@
     }
     .admin-button{
         width: 100%;
+    }
+    .admin-event-management-actions .admin-button{
+        width: auto;
+        flex: 1 1 auto;
+    }
+    .admin-form-actions{
+        align-items: stretch;
+        flex-direction: column;
     }
 }

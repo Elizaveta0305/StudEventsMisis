@@ -5,7 +5,7 @@
     <title>Админ-панель</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/pages/admin.css?v=4">
+    <link rel="stylesheet" href="../css/pages/admin.css?v=6">
     <link rel="icon" type="image/x-icon" href="../assets/logo/favicon.svg">
 </head>
 <body>
@@ -34,7 +34,24 @@
                     </div>
                 </div>
 
-                <form class="admin-form" aria-label="Данные нового мероприятия">
+                <div class="admin-event-management" aria-label="Управление существующими мероприятиями">
+                    <label class="admin-field">
+                        <span>Существующее мероприятие</span>
+                        <select id="adminEventSelect" name="managed_event">
+                            <option value="">Выберите мероприятие</option>
+                            <option value="event-1">Хахатон · 12 августа 2027</option>
+                            <option value="event-2">День открытых дверей · 1 сентября 2026</option>
+                            <option value="event-3">Погружение · 25 августа 2026</option>
+                        </select>
+                    </label>
+                    <div class="admin-event-management-actions">
+                        <button class="admin-button admin-button-secondary" id="adminNewEvent" type="button">Новое мероприятие</button>
+                        <button class="admin-button admin-button-secondary" id="adminEditEvent" type="button" disabled>Редактировать</button>
+                        <button class="admin-button admin-button-danger" id="adminDeleteEvent" type="button" disabled>Удалить</button>
+                    </div>
+                </div>
+
+                <form class="admin-form" id="adminEventForm" aria-label="Данные мероприятия">
                     <div class="admin-form-grid">
                         <label class="admin-field admin-field-wide">
                             <span>Название мероприятия</span>
@@ -115,11 +132,13 @@
                         <label class="admin-field admin-field-wide">
                             <span>Приказ или документ мероприятия</span>
                             <input class="admin-file-input" type="file" name="event_document" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+                            <small class="admin-document-hint" id="adminDocumentHint">При редактировании можно выбрать новый файл, чтобы заменить текущий.</small>
                         </label>
                     </div>
 
                     <div class="admin-form-actions">
-                        <button class="admin-button" type="button">Создать мероприятие</button>
+                        <span class="admin-event-form-status" id="adminEventStatus" role="status" aria-live="polite">Заполните поля, чтобы создать мероприятие.</span>
+                        <button class="admin-button" id="adminEventSubmit" type="submit">Создать мероприятие</button>
                     </div>
                 </form>
             </section>
@@ -132,32 +151,53 @@
                     </div>
                 </div>
 
-                <form class="admin-form" aria-label="Данные нового студента">
+                <form class="admin-form" id="adminStudentForm" aria-label="Данные нового студента" novalidate>
                     <div class="admin-form-grid">
                         <label class="admin-field">
-                            <span>ФИО</span>
-                            <input type="text" name="student_name" placeholder="Фамилия Имя Отчество" required>
+                            <span>Имя</span>
+                            <input type="text" name="first_name" required>
                         </label>
                         <label class="admin-field">
-                            <span>Email</span>
-                            <input type="email" name="student_email" placeholder="name@example.ru" required>
+                            <span>Фамилия</span>
+                            <input type="text" name="last_name" required>
+                        </label>
+                        <label class="admin-field">
+                            <span>Отчество</span>
+                            <input type="text" name="patronymic">
+                        </label>
+                        <label class="admin-field">
+                            <span>Номер студенческого билета</span>
+                            <input type="text" name="student_id" required>
                         </label>
                         <label class="admin-field">
                             <span>Факультет</span>
-                            <select name="student_faculty" required>
+                            <select id="adminStudentFaculty" name="faculty" required>
                                 <option value="" selected disabled>Выберите факультет</option>
-                                <option>ФАИТ</option>
-                                <option>ИЭФ</option>
-                                <option>ФММТ</option>
+                                <option value="it">ФАИТ</option>
+                                <option value="economics">ИЭФ</option>
+                                <option value="law">ФММТ</option>
                             </select>
                         </label>
                         <label class="admin-field">
                             <span>Группа</span>
-                            <input type="text" name="student_group" placeholder="Например, ИТ-23" required>
+                            <input type="text" name="group" required>
+                        </label>
+                        <label class="admin-field">
+                            <span>Логин</span>
+                            <input type="text" name="register_login" required>
+                        </label>
+                        <label class="admin-field">
+                            <span>Пароль</span>
+                            <input type="password" name="register_password" required>
+                        </label>
+                        <label class="admin-field">
+                            <span>Повторите пароль</span>
+                            <input type="password" name="confirm_password" required>
                         </label>
                     </div>
                     <div class="admin-form-actions">
-                        <button class="admin-button admin-button-secondary" type="button">Добавить студента</button>
+                        <span class="admin-form-status" id="adminStudentStatus" role="status" aria-live="polite">Заполните форму и нажмите «Добавить студента» для проверки.</span>
+                        <button class="admin-button admin-button-secondary" id="adminStudentCheck" type="button">Проверить данные</button>
                     </div>
                 </form>
             </section>
@@ -173,12 +213,16 @@
                 <form class="admin-form" aria-label="Данные нового сотрудника">
                     <div class="admin-form-grid">
                         <label class="admin-field">
-                            <span>ФИО</span>
-                            <input type="text" name="staff_name" placeholder="Фамилия Имя Отчество" required>
+                            <span>Имя</span>
+                            <input type="text" name="first_name" required>
                         </label>
                         <label class="admin-field">
-                            <span>Email</span>
-                            <input type="email" name="staff_email" placeholder="name@example.ru" required>
+                            <span>Фамилия</span>
+                            <input type="text" name="last_name" required>
+                        </label>
+                        <label class="admin-field">
+                            <span>Отчество</span>
+                            <input type="text" name="patronymic">
                         </label>
                         <label class="admin-field">
                             <span>Подразделение</span>
@@ -187,6 +231,18 @@
                         <label class="admin-field">
                             <span>Должность</span>
                             <input type="text" name="staff_position" placeholder="Должность сотрудника">
+                        </label>
+                        <label class="admin-field">
+                            <span>Логин</span>
+                            <input type="text" name="register_login" required>
+                        </label>
+                        <label class="admin-field">
+                            <span>Пароль</span>
+                            <input type="password" name="register_password" required>
+                        </label>
+                        <label class="admin-field">
+                            <span>Повторите пароль</span>
+                            <input type="password" name="confirm_password" required>
                         </label>
                     </div>
                     <div class="admin-form-actions">
@@ -199,6 +255,6 @@
 
     <?php include '../includes/footer.php'; ?>
     <script src="../js/custom-select.js?v=4"></script>
-    <script src="../js/admin.js?v=1"></script>
+    <script src="../js/admin.js?v=3"></script>
 </body>
 </html>

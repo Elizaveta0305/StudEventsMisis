@@ -1,4 +1,69 @@
 (function(){
+  const feedbackTimers = new WeakMap();
+
+  function showOperationFeedback(type, message, target){
+    const allowedTypes = ['success', 'warning', 'error'];
+    if(!allowedTypes.includes(type)) return;
+
+    let stack = document.querySelector('.operation-feedback-stack');
+    if(!stack){
+      stack = document.createElement('div');
+      stack.className = 'operation-feedback-stack';
+      stack.setAttribute('aria-label', 'Уведомления');
+      document.body.appendChild(stack);
+    }
+
+    const titles = {
+      success: 'Успешно',
+      warning: 'Проверьте данные',
+      error: 'Не удалось выполнить операцию'
+    };
+    const symbols = { success: '\u2713', warning: '!', error: '\u00d7' };
+    const toast = document.createElement('div');
+    toast.className = `operation-feedback operation-feedback-${type}`;
+    toast.setAttribute('role', type === 'success' ? 'status' : 'alert');
+
+    const icon = document.createElement('span');
+    icon.className = 'operation-feedback-icon';
+    icon.setAttribute('aria-hidden', 'true');
+    icon.textContent = symbols[type];
+
+    const content = document.createElement('div');
+    content.className = 'operation-feedback-content';
+    const title = document.createElement('strong');
+    title.textContent = titles[type];
+    const description = document.createElement('span');
+    description.textContent = message;
+    content.append(title, description);
+
+    const close = document.createElement('button');
+    close.className = 'operation-feedback-close';
+    close.type = 'button';
+    close.setAttribute('aria-label', 'Закрыть уведомление');
+    close.textContent = '\u00d7';
+    close.addEventListener('click', () => toast.remove());
+
+    toast.append(icon, content, close);
+    stack.appendChild(toast);
+    window.setTimeout(() => toast.remove(), 5000);
+
+    const targetElement = typeof target === 'string' ? document.querySelector(target) : target;
+    if(targetElement instanceof HTMLElement){
+      const previousTimer = feedbackTimers.get(targetElement);
+      if(previousTimer) window.clearTimeout(previousTimer);
+      targetElement.classList.add('operation-feedback-target');
+      targetElement.dataset.operationState = type;
+      const timer = window.setTimeout(() => {
+        delete targetElement.dataset.operationState;
+        targetElement.classList.remove('operation-feedback-target');
+        feedbackTimers.delete(targetElement);
+      }, 5000);
+      feedbackTimers.set(targetElement, timer);
+    }
+  }
+
+  window.showOperationFeedback = showOperationFeedback;
+
   function initUserDropdown(toggleSelector = '#userToggle', menuSelector = '.user-menu'){
     const userToggle = document.querySelector(toggleSelector);
     const userMenu = document.querySelector(menuSelector);
