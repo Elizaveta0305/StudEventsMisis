@@ -6,9 +6,7 @@
 
     const wrapper = document.createElement('div');
     wrapper.className = 'custom-select';
-    wrapper.style.width = `${select.getBoundingClientRect().width}px`;
-    wrapper.style.maxWidth = '100%';
-    wrapper.style.height = selectStyle.height;
+    wrapper.style.width = '100%';
     const trigger = document.createElement('button');
     trigger.className = 'custom-select-trigger';
     trigger.type = 'button';
@@ -17,7 +15,6 @@
     trigger.setAttribute('aria-expanded', 'false');
     trigger.style.minHeight = selectStyle.minHeight;
     trigger.style.width = '100%';
-    trigger.style.height = '100%';
     const label = document.createElement('span');
     const arrow = document.createElement('span');
     arrow.className = 'custom-select-arrow';
@@ -117,7 +114,9 @@
     sync();
   }
 
+  window.enhanceCustomSelect = enhanceSelect;
+
   document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('.select-field select, .faculty-analytics-faculty-control select, .faculty-analytics-period-control select, .student-analytics-period select, .settings-select, .admin-field select:not([multiple])').forEach(enhanceSelect);
+    document.querySelectorAll('.select-field select, .faculty-analytics-faculty-control select, .faculty-analytics-period-control select, .student-analytics-period select, .settings-select, .admin-field select:not([multiple]), .event-modal-form select:not([multiple])').forEach(enhanceSelect);
   });
 })();

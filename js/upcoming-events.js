@@ -4,7 +4,12 @@
   function readEvents(){
     try{
       const events = JSON.parse(localStorage.getItem(storageKey) || '[]');
-      return Array.isArray(events) ? events : [];
+      return Array.isArray(events)
+        ? events.map((event, index) => ({
+          ...event,
+          id: event.id || `calendar-${event.date || 'undated'}-${index + 1}`
+        }))
+        : [];
     }catch{
       return [];
     }
@@ -36,8 +41,10 @@
   }
 
   function createEventItem(event){
-    const item = document.createElement('article');
+    const item = document.createElement('a');
     item.className = 'upcoming-event-item';
+    item.href = `./event.php?id=${encodeURIComponent(event.id)}`;
+    item.setAttribute('aria-label', `Открыть мероприятие: ${event.title || 'Мероприятие'}`);
 
     const date = document.createElement('time');
     date.className = 'upcoming-event-date';
@@ -50,6 +57,22 @@
     title.textContent = event.title || 'Мероприятие';
     details.appendChild(title);
 
+    const eventMeta = document.createElement('div');
+    eventMeta.className = 'upcoming-event-meta';
+    if(event.type){
+      const type = document.createElement('span');
+      type.className = `upcoming-event-type ${getEventTypeClass(event.type)}`.trim();
+      type.textContent = event.type;
+      eventMeta.appendChild(type);
+    }
+    if(event.level){
+      const level = document.createElement('span');
+      level.className = 'upcoming-event-level';
+      level.textContent = event.level;
+      eventMeta.appendChild(level);
+    }
+    if(eventMeta.childElementCount) details.appendChild(eventMeta);
+
     if(event.description){
       const description = document.createElement('p');
       description.className = 'upcoming-event-description';
@@ -59,6 +82,16 @@
 
     item.append(date, details);
     return item;
+  }
+
+  function getEventTypeClass(type){
+    return {
+      'Научное': 'event-type-scientific',
+      'Общественное': 'event-type-public',
+      'Спортивное': 'event-type-sport',
+      'Творческое': 'event-type-creative',
+      'Городское': 'event-type-city'
+    }[type] || '';
   }
 
   function renderEvents(container){

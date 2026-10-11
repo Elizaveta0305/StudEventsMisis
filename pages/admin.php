@@ -5,7 +5,7 @@
     <title>Админ-панель</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/pages/admin.css?v=6">
+    <link rel="stylesheet" href="../css/pages/admin.css?v=10">
     <link rel="icon" type="image/x-icon" href="../assets/logo/favicon.svg">
 </head>
 <body>
@@ -70,8 +70,23 @@
                             </select>
                         </label>
                         <label class="admin-field">
+                            <span>Уровень мероприятия</span>
+                            <select name="event_level" required>
+                                <option value="" selected disabled>Выберите уровень</option>
+                                <option value="Университетский">Университетский</option>
+                                <option value="Городской">Городской</option>
+                                <option value="Региональный">Региональный</option>
+                                <option value="Межрегиональный">Межрегиональный</option>
+                                <option value="Всероссийский">Всероссийский</option>
+                            </select>
+                        </label>
+                        <label class="admin-field">
                             <span>Место проведения</span>
                             <input type="text" name="event_location" placeholder="Корпус, аудитория или адрес">
+                        </label>
+                        <label class="admin-field">
+                            <span>Кто подписывает служебные записки</span>
+                            <input type="text" name="event_signer" placeholder="ФИО ответственного за мероприятие">
                         </label>
 
                         <label class="admin-field">
@@ -86,6 +101,10 @@
                         <label class="admin-field admin-field-wide">
                             <span>Описание</span>
                             <textarea name="event_description" rows="3" placeholder="Краткая информация о мероприятии"></textarea>
+                        </label>
+                        <label class="admin-description-toggle admin-field-wide">
+                            <input type="checkbox" name="event_description_hidden" value="1">
+                            <span>Не добавлять описание мероприятия</span>
                         </label>
 
                         <div class="admin-field">
@@ -134,6 +153,16 @@
                             <input class="admin-file-input" type="file" name="event_document" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
                             <small class="admin-document-hint" id="adminDocumentHint">При редактировании можно выбрать новый файл, чтобы заменить текущий.</small>
                         </label>
+
+                        <div class="admin-field admin-field-wide">
+                            <label for="adminEventCover">Обложка мероприятия</label>
+                            <input class="admin-file-input" id="adminEventCover" type="file" name="event_cover" accept="image/jpeg,image/png,image/webp">
+                            <small class="admin-document-hint" id="adminCoverHint">Горизонтальное изображение будет размещено во всю ширину страницы мероприятия.</small>
+                            <div class="admin-cover-preview" id="adminCoverPreview" hidden>
+                                <img id="adminCoverPreviewImage" alt="Предпросмотр обложки мероприятия">
+                                <button class="admin-button admin-button-secondary" id="adminRemoveCover" type="button">Убрать обложку</button>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="admin-form-actions">
@@ -255,6 +284,6 @@
 
     <?php include '../includes/footer.php'; ?>
     <script src="../js/custom-select.js?v=4"></script>
-    <script src="../js/admin.js?v=3"></script>
+    <script src="../js/admin.js?v=9"></script>
 </body>
 </html>

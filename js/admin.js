@@ -168,49 +168,86 @@
     const title = document.querySelector('#adminEventsTitle');
     const status = document.querySelector('#adminEventStatus');
     const documentHint = document.querySelector('#adminDocumentHint');
+    const coverInput = document.querySelector('#adminEventCover');
+    const coverHint = document.querySelector('#adminCoverHint');
+    const coverPreview = document.querySelector('#adminCoverPreview');
+    const coverPreviewImage = document.querySelector('#adminCoverPreviewImage');
+    const removeCoverButton = document.querySelector('#adminRemoveCover');
+    const descriptionInput = form.querySelector('[name="event_description"]');
+    const descriptionHiddenInput = form.querySelector('[name="event_description_hidden"]');
     const peoplePickers = Array.from(form.querySelectorAll('[data-admin-people-picker]'));
     let editingId = null;
+    let pendingCoverUrl = '';
+    let coverWasRemoved = false;
     let events = [
       {
         id: 'event-1',
         name: 'Хахатон',
         type: 'Научное',
+        level: 'Всероссийский',
         location: 'Главный корпус',
+        signer: 'Анна Сергеевна Мартынова',
         date: '2027-08-12',
         time: '14:00',
         description: 'Хакатон для студентов и школьников.',
         students: ['student-1', 'student-3'],
         staff: ['staff-1'],
-        document: 'Приказ о проведении хахатона.pdf'
+        document: 'Приказ о проведении хахатона.pdf',
+        cover: ''
       },
       {
         id: 'event-2',
         name: 'День открытых дверей',
         type: 'Общественное',
+        level: 'Университетский',
         location: 'Главный корпус',
+        signer: 'Наталья Викторовна Петрова',
         date: '2026-09-01',
         time: '10:00',
         description: 'Знакомство абитуриентов с университетом.',
         students: ['student-2'],
         staff: ['staff-2', 'staff-3'],
-        document: 'Приказ о проведении дня открытых дверей.pdf'
+        document: 'Приказ о проведении дня открытых дверей.pdf',
+        cover: ''
       },
       {
         id: 'event-3',
         name: 'Погружение',
         type: 'Городское',
+        level: 'Городской',
         location: 'Университетский кампус',
+        signer: 'Ольга Александровна Иванова',
         date: '2026-08-25',
         time: '16:30',
         description: 'Мероприятие для знакомства и сплочения студентов.',
         students: ['student-4', 'student-5'],
         staff: ['staff-4'],
-        document: ''
+        document: '',
+        cover: ''
       }
     ];
 
     function getField(name){
       return form.elements.namedItem(name);
+    }
+
+    function setCoverPreview(source){
+      coverPreview.hidden = !source;
+      if(source) coverPreviewImage.src = source;
+      else coverPreviewImage.removeAttribute('src');
+    }
+
+    function clearPendingCover(){
+      if(pendingCoverUrl) URL.revokeObjectURL(pendingCoverUrl);
+      pendingCoverUrl = '';
+    }
+
+    function resetCover(){
+      clearPendingCover();
+      coverInput.value = '';
+      coverWasRemoved = false;
+      setCoverPreview('');
+      coverHint.textContent = 'Горизонтальное изображение будет размещено во всю ширину страницы мероприятия.';
     }
 
     function refreshManagedEvents(selectedId = ''){
@@ -219,7 +256,7 @@
       events.forEach(event => {
         const option = document.createElement('option');
         option.value = event.id;
-        option.textContent = `${event.name} · ${new Date(`${event.date}T00:00:00`).toLocaleDateString('ru-RU')}`;
+        option.textContent = `${event.name} · ${event.level} · ${new Date(`${event.date}T00:00:00`).toLocaleDateString('ru-RU')}`;
         eventSelect.appendChild(option);
       });
       eventSelect.value = selectedId;
@@ -232,7 +269,9 @@
 
     function resetForm(){
       form.reset();
+      descriptionInput.disabled = false;
       peoplePickers.forEach(picker => picker.adminPeoplePicker?.clear());
+      resetCover();
       const type = getField('event_type');
       type.dispatchEvent(new Event('change', { bubbles: true }));
       documentHint.textContent = 'При редактировании можно выбрать новый файл, чтобы заменить текущий.';
@@ -259,15 +298,24 @@
       getField('event_name').value = event.name;
       getField('event_type').value = event.type;
       getField('event_type').dispatchEvent(new Event('change', { bubbles: true }));
+      getField('event_level').value = event.level || '';
+      getField('event_level').dispatchEvent(new Event('change', { bubbles: true }));
       getField('event_location').value = event.location;
+      getField('event_signer').value = event.signer || '';
       getField('event_date').value = event.date;
       getField('event_time').value = event.time;
       getField('event_description').value = event.description;
+      descriptionHiddenInput.checked = Boolean(event.descriptionHidden);
+      descriptionInput.disabled = descriptionHiddenInput.checked;
       peoplePickers.find(picker => picker.dataset.fieldName === 'students[]')?.adminPeoplePicker?.setValues(event.students);
       peoplePickers.find(picker => picker.dataset.fieldName === 'staff[]')?.adminPeoplePicker?.setValues(event.staff);
       documentHint.textContent = event.document
         ? `Текущий документ: ${event.document}. Выберите файл, чтобы заменить его.`
         : 'Для мероприятия пока не прикреплён документ.';
+      setCoverPreview(event.cover);
+      coverHint.textContent = event.cover
+        ? 'Текущая обложка. Выберите новое изображение, чтобы заменить её.'
+        : 'Горизонтальное изображение будет размещено во всю ширину страницы мероприятия.';
       title.textContent = 'Редактирование мероприятия';
       submitButton.textContent = 'Сохранить изменения';
       status.textContent = `Редактируется: ${event.name}`;
@@ -279,10 +327,36 @@
     });
     newButton.addEventListener('click', startCreate);
     editButton.addEventListener('click', startEdit);
+    descriptionHiddenInput.addEventListener('change', () => {
+      descriptionInput.disabled = descriptionHiddenInput.checked;
+    });
+    coverInput.addEventListener('change', () => {
+      const file = coverInput.files[0];
+      if(!file) return;
+      if(!file.type.startsWith('image/')){
+        coverInput.value = '';
+        window.showOperationFeedback?.('warning', 'Выберите файл изображения.', form.closest('.admin-section'));
+        return;
+      }
+
+      clearPendingCover();
+      pendingCoverUrl = URL.createObjectURL(file);
+      coverWasRemoved = false;
+      setCoverPreview(pendingCoverUrl);
+      coverHint.textContent = `Предпросмотр: ${file.name}`;
+    });
+    removeCoverButton.addEventListener('click', () => {
+      clearPendingCover();
+      coverInput.value = '';
+      coverWasRemoved = true;
+      setCoverPreview('');
+      coverHint.textContent = 'Обложка будет удалена при сохранении изменений.';
+    });
     deleteButton.addEventListener('click', () => {
       const event = events.find(item => item.id === eventSelect.value);
       if(!event || !window.confirm(`Удалить мероприятие «${event.name}»?`)) return;
 
+      if(event.cover.startsWith('blob:')) URL.revokeObjectURL(event.cover);
       events = events.filter(item => item.id !== event.id);
       refreshManagedEvents();
       if(editingId === event.id) startCreate();
@@ -299,18 +373,35 @@
 
       const values = new FormData(form);
       const currentFile = values.get('event_document');
+      const currentCover = values.get('event_cover');
       const existing = events.find(item => item.id === editingId);
+      let cover = existing?.cover || '';
+
+      if(currentCover instanceof File && currentCover.name){
+        if(existing?.cover.startsWith('blob:')) URL.revokeObjectURL(existing.cover);
+        cover = pendingCoverUrl || URL.createObjectURL(currentCover);
+        pendingCoverUrl = '';
+      }else if(coverWasRemoved){
+        if(existing?.cover.startsWith('blob:')) URL.revokeObjectURL(existing.cover);
+        cover = '';
+      }
+
+      coverWasRemoved = false;
       const record = {
         id: editingId || `event-${Date.now()}`,
         name: values.get('event_name').trim(),
         type: values.get('event_type'),
+        level: values.get('event_level'),
         location: values.get('event_location').trim(),
+        signer: values.get('event_signer').trim(),
         date: values.get('event_date'),
         time: values.get('event_time'),
         description: values.get('event_description').trim(),
+        descriptionHidden: descriptionHiddenInput.checked,
         students: peoplePickers.find(picker => picker.dataset.fieldName === 'students[]')?.adminPeoplePicker?.getValues() || [],
         staff: peoplePickers.find(picker => picker.dataset.fieldName === 'staff[]')?.adminPeoplePicker?.getValues() || [],
-        document: currentFile instanceof File && currentFile.name ? currentFile.name : existing?.document || ''
+        document: currentFile instanceof File && currentFile.name ? currentFile.name : existing?.document || '',
+        cover
       };
 
       if(existing){
@@ -330,6 +421,10 @@
       documentHint.textContent = record.document
         ? `Текущий документ: ${record.document}. Выберите файл, чтобы заменить его.`
         : 'Для мероприятия пока не прикреплён документ.';
+      setCoverPreview(record.cover);
+      coverHint.textContent = record.cover
+        ? 'Текущая обложка. Выберите новое изображение, чтобы заменить её.'
+        : 'Горизонтальное изображение будет размещено во всю ширину страницы мероприятия.';
     });
 
     refreshManagedEvents();

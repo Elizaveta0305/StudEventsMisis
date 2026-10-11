@@ -158,6 +158,28 @@
     min-height: 96px;
     resize: vertical;
 }
+.admin-field textarea:disabled{
+    opacity: .58;
+    cursor: not-allowed;
+}
+.admin-description-toggle{
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    color: var(--color-muted);
+    font-size: 12px;
+    font-weight: 600;
+}
+.admin-description-toggle input{
+    width: 16px;
+    height: 16px;
+    flex: 0 0 16px;
+    margin: 0;
+    accent-color: var(--color-primary);
+}
+.admin-description-toggle span{
+    cursor: pointer;
+}
 .admin-field select[multiple]{
     min-height: 142px;
     padding: 7px;
@@ -395,6 +417,28 @@
     color: var(--color-muted);
     font-size: 11px;
     font-weight: 500;
+}
+.admin-cover-preview{
+    display: grid;
+    justify-items: start;
+    gap: 10px;
+}
+.admin-cover-preview[hidden]{
+    display: none;
+}
+.admin-cover-preview img{
+    display: block;
+    width: min(100%, 560px);
+    aspect-ratio: 16 / 5;
+    border: 1px solid var(--color-border);
+    border-radius: 9px;
+    background: var(--color-bg-soft);
+    object-fit: cover;
+}
+.admin-cover-preview .admin-button{
+    min-height: 36px;
+    padding-inline: 12px;
+    font-size: 12px;
 }
 .admin-button{
     min-height: 44px;

@@ -91,6 +91,20 @@
     border: 1px solid var(--color-border-soft);
     border-radius: 12px;
     background: var(--color-bg-soft);
+    color: inherit;
+    text-decoration: none;
+    transition: border-color 140ms ease, background-color 140ms ease;
+}
+
+.upcoming-event-item:hover,
+.upcoming-event-item:focus-visible {
+    border-color: var(--color-primary-soft);
+    background: var(--color-surface-muted);
+}
+
+.upcoming-event-item:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
 }
 
 .upcoming-event-date {
@@ -107,6 +121,34 @@
     font-weight: 700;
     overflow-wrap: anywhere;
 }
+.upcoming-event-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 6px;
+}
+
+.upcoming-event-type,
+.upcoming-event-level {
+    display: inline-flex;
+    align-items: center;
+    min-height: 23px;
+    padding: 3px 7px;
+    border: 1px solid var(--color-border-soft);
+    border-radius: 6px;
+    background: var(--color-bg-soft);
+    color: var(--color-text);
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.upcoming-event-type{gap:6px}
+.upcoming-event-type::before{content:'';width:7px;height:7px;flex:0 0 7px;border-radius:50%;background:var(--color-muted)}
+.upcoming-event-type.event-type-scientific::before{background:#3b82f6}
+.upcoming-event-type.event-type-public::before{background:#f59e0b}
+.upcoming-event-type.event-type-sport::before{background:#10b981}
+.upcoming-event-type.event-type-creative::before{background:#a855f7}
+.upcoming-event-type.event-type-city::before{background:#ef4444}
 
 .upcoming-event-description {
     margin: 5px 0 0;

@@ -5,9 +5,9 @@
 @import "header.css";
 @import "buttons.css";
 @import "auth.css";
-@import "pages/calendar.css";
+@import "pages/calendar.css?v=19";
 @import "pages/profile.css";
 @import "footer.css";
-@import "components/upcoming-events.css";
+@import "components/upcoming-events.css?v=4";
 @import "components/custom-select.css?v=2";
 @import "components/operation-feedback.css?v=1";

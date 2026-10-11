@@ -5,7 +5,7 @@
     <title>Личный кабинет</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/pages/profile.css?v=7">
+    <link rel="stylesheet" href="../css/pages/profile.css?v=8">
     <link rel="stylesheet" href="../css/components/custom-select.css?v=3">
     <link rel="icon" type="image/x-icon" href="../assets/logo/favicon.svg">
 </head>
@@ -151,36 +151,39 @@
                     <article class="event-card-block">
                         <div class="event-card-meta">
                             <div class="event-card-date">12 авг · 14:00</div>
-                            <div class="event-card-type">Научное</div>
+                            <div class="event-card-type event-type-scientific">Научное</div>
                         </div>
                         <div class="event-card-title">Хахакмекфест 2027</div>
+                        <div class="event-card-level">Всероссийский уровень</div>
                         <p class="event-card-description">Хакатон для студентов и школьников.</p>
                         <div class="event-card-footer">
-                            <a href="#" class="event-card-link">Подробнее</a>
+                            <a href="../pages/event.php?id=event-1" class="event-card-link">Подробнее</a>
                             <a href="#" class="event-card-download"><span class="download-icon"><img src="../assets/ui/download.svg" alt="Скачать"></span>Скачать</a>
                         </div>
                     </article>
                     <article class="event-card-block">
                         <div class="event-card-meta">
                             <div class="event-card-date">1 сен · 10:00</div>
-                            <div class="event-card-type">Общественное</div>
+                            <div class="event-card-type event-type-public">Общественное</div>
                         </div>
                         <div class="event-card-title">День открытых дверей</div>
+                        <div class="event-card-level">Университетский уровень</div>
                         <p class="event-card-description">Линейка на территории университета.</p>
                         <div class="event-card-footer">
-                            <a href="#" class="event-card-link">Подробнее</a>
+                            <a href="../pages/event.php?id=event-2" class="event-card-link">Подробнее</a>
                             <a href="#" class="event-card-download"><span class="download-icon"><img src="../assets/ui/download.svg" alt="Скачать"></span>Скачать</a>
                         </div>
                     </article>
                     <article class="event-card-block">
                         <div class="event-card-meta">
                             <div class="event-card-date">25 авг · 16:30</div>
-                            <div class="event-card-type">Городское</div>
+                            <div class="event-card-type event-type-city">Городское</div>
                         </div>
                         <div class="event-card-title">Погружение 2026</div>
+                        <div class="event-card-level">Городской уровень</div>
                         <p class="event-card-description">Мероприятие для сплочения студентов.</p>
                         <div class="event-card-footer">
-                            <a href="#" class="event-card-link">Подробнее</a>
+                            <a href="../pages/event.php?id=event-3" class="event-card-link">Подробнее</a>
                             <a href="#" class="event-card-download"><span class="download-icon"><img src="../assets/ui/download.svg" alt="Скачать"></span>Скачать</a>
                         </div>
                     </article>

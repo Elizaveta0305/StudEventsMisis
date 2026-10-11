@@ -218,18 +218,18 @@
     background: var(--color-primary);
 }
 .event-type-public{
-    background: rgba(248,113,113,0.6);
-    color: #b91c1c;
+    background: rgba(245,158,11,0.16);
+    color: #b45309;
 }
 .event-type-public::before{
-    background: #dc2626;
+    background: #f59e0b;
 }
 .event-type-city{
-    background: rgba(167,139,250,0.6);
-    color: #6d28d9;
+    background: rgba(239,68,68,0.13);
+    color: #b91c1c;
 }
 .event-type-city::before{
-    background: #7c3aed;
+    background: #ef4444;
 }
 .event-type-sport{
     background: rgba(52,211,153,0.6);
@@ -237,6 +237,26 @@
 }
 .event-type-sport::before{
     background: #16a34a;
+}
+.event-type-creative{
+    background: rgba(168,85,247,0.14);
+    color: #7e22ce;
+}
+.event-type-creative::before{
+    background: #a855f7;
+}
+.event-card-type.event-type-scientific,
+.event-card-type.event-type-public,
+.event-card-type.event-type-sport,
+.event-card-type.event-type-creative,
+.event-card-type.event-type-city{
+    background: var(--color-bg-soft);
+    color: var(--color-text);
+}
+.event-card-level{
+    color: var(--color-muted);
+    font-size: 12px;
+    font-weight: 600;
 }
 .event-card-title{
     font-size: 18px;
