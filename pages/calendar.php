@@ -9,7 +9,7 @@
 </head>
 <body>
     <?php include '../includes/header.php'; ?>
-    <div class="container">
+    <div class="container container-wide">
         <main>
             <div class="title-events-row">
                 <div class="title-events">Календарь мероприятий</div>
@@ -159,6 +159,7 @@
         </form>
     </div>
     <script src="../js/custom-select.js?v=6"></script>
-    <script src="../js/calendar.js?v=21"></script>
+    <script src="../js/calendar-settings.js?v=1"></script>
+    <script src="../js/calendar.js?v=24"></script>
 </body>
 </html>

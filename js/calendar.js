@@ -16,6 +16,8 @@
       }
     });
   });
+  const fallbackSettings = { weekStart: 'mon', timeFormat: '24', showTime: true, showPlace: true, hiddenTypes: [] };
+  let settings = getSettings();
   let current = new Date();
   current = new Date(current.getFullYear(), current.getMonth(), 1);
   let calendarContainer = null;
@@ -36,6 +38,18 @@
 
   function formatDateKey(year, month, day){
     return `${year}-${String(month+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+  }
+
+  function getSettings(){
+    return window.CalendarSettings ? window.CalendarSettings.load() : fallbackSettings;
+  }
+
+  function formatTime(time){
+    const match = /^(\d{1,2}):(\d{2})/.exec(time || '');
+    if(!match || settings.timeFormat !== '12') return time;
+    const hours = Number(match[1]);
+    const suffix = hours >= 12 ? 'PM' : 'AM';
+    return `${hours % 12 || 12}:${match[2]} ${suffix}`;
   }
 
   function capitalizeLabel(text){
@@ -66,15 +80,21 @@
       type.textContent = event.type;
       card.appendChild(type);
     }
-    const description = document.createElement('p');
-    const eventDetails = [event.time, event.location].filter(Boolean);
-    description.textContent = eventDetails.join(' · ') || event.date;
-    card.appendChild(description);
+    if(settings.showTime || settings.showPlace){
+      const description = document.createElement('p');
+      const eventDetails = [
+        settings.showTime ? formatTime(event.time) : '',
+        settings.showPlace ? event.location : ''
+      ].filter(Boolean);
+      description.textContent = eventDetails.join(' · ') || event.date;
+      card.appendChild(description);
+    }
     return card;
   }
 
   function build(){
     if(!calendarContainer) return;
+    settings = getSettings();
     calendarContainer.innerHTML = '';
 
     const header = document.createElement('div');
@@ -86,8 +106,8 @@
 
     const nav = document.createElement('div');
     nav.className = 'calendar-nav';
-    const prev = document.createElement('button'); prev.textContent = '<';
-    const next = document.createElement('button'); next.textContent = '>';
+    const prev = document.createElement('button'); prev.textContent = '‹'; prev.setAttribute('aria-label', 'Предыдущий месяц');
+    const next = document.createElement('button'); next.textContent = '›'; next.setAttribute('aria-label', 'Следующий месяц');
     prev.addEventListener('click', ()=>{ current = new Date(current.getFullYear(), current.getMonth()-1, 1); build(); });
     next.addEventListener('click', ()=>{ current = new Date(current.getFullYear(), current.getMonth()+1, 1); build(); });
     nav.appendChild(prev);
@@ -99,7 +119,11 @@
 
     const grid = document.createElement('div');
     grid.className = 'calendar-grid';
-    const weekdays = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
+    grid.dataset.weekStart = settings.weekStart === 'sun' ? 'sun' : 'mon';
+    const weekStartsOnSunday = settings.weekStart === 'sun';
+    const weekdays = weekStartsOnSunday
+      ? ['Вс','Пн','Вт','Ср','Чт','Пт','Сб']
+      : ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
     weekdays.forEach(day => {
       const w = document.createElement('div');
       w.className = 'calendar-weekday';
@@ -110,7 +134,7 @@
     const year = current.getFullYear();
     const month = current.getMonth();
     const firstDay = new Date(year, month, 1);
-    const leading = (firstDay.getDay() + 6) % 7;
+    const leading = weekStartsOnSunday ? firstDay.getDay() : (firstDay.getDay() + 6) % 7;
     const daysInMonth = new Date(year, month + 1, 0).getDate();
     const prevDays = new Date(year, month, 0).getDate();
 
@@ -159,7 +183,7 @@
       cell.appendChild(dateSpan);
       cell.appendChild(addButton);
 
-      const dayEvents = events.filter(event => event.date === dateKey);
+      const dayEvents = events.filter(event => event.date === dateKey && !settings.hiddenTypes.includes(event.type));
       if(dayEvents.length){
         const eventsContainer = document.createElement('div');
         eventsContainer.className = 'events';

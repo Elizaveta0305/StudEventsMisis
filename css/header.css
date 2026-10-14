@@ -129,3 +129,12 @@ header::after{
     visibility: visible;
     pointer-events: auto;
 }
+img.logo-dark{
+    display:none;
+}
+:root.dark img.logo-light{
+    display:none;
+}
+:root.dark img.logo-dark{
+    display:block;
+}

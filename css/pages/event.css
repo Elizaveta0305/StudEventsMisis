@@ -147,6 +147,11 @@
 .event-inline-control[type="time"]{
     font-size:13px;
 }
+.event-inline-control[type="date"]::-webkit-calendar-picker-indicator,
+.event-inline-control[type="time"]::-webkit-calendar-picker-indicator{
+    filter:var(--icon-filter);
+    cursor:pointer;
+}
 .event-document-type{
     display: inline-flex;
     align-items: center;

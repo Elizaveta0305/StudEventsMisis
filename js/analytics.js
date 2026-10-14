@@ -100,6 +100,10 @@
   const studentSearch = document.getElementById('studentSearch');
   const facultyFilter = document.getElementById('facultyFilter');
   const studentDetails = document.getElementById('studentDetails');
+  const studentSuggestions = document.getElementById('studentSuggestions');
+  const MAX_SUGGESTIONS = 8;
+  let suggestionItems = [];
+  let activeSuggestionIndex = -1;
 
   let currentStudent = null;
   let currentFilters = {
@@ -144,12 +148,16 @@
     });
   }
 
+  function normalizeSearch(text) {
+    return text.trim().replace(/\s+/g, ' ').toLowerCase().replace(/ё/g, 'е');
+  }
+
   function getFilteredStudents() {
-    const search = studentSearch.value.trim().toLowerCase();
+    const search = normalizeSearch(studentSearch.value);
     const selectedFaculty = facultyFilter.value;
 
     return students.filter(student => {
-      const matchesSearch = !search || student.name.toLowerCase().includes(search);
+      const matchesSearch = !search || normalizeSearch(student.name).includes(search);
 
       const matchesFaculty = selectedFaculty === 'all' || student.faculty === selectedFaculty;
 
@@ -469,37 +477,136 @@
     ctx.fillText(String(values.reduce((sum, value) => sum + value, 0)), centerX, centerY);
   }
 
-  function applySearch() {
-    const filtered = getFilteredStudents();
+  function showStudentPlaceholder() {
+    currentStudent = null;
+    studentDetails.innerHTML = '<div class="empty-state">Введите ФИО студента и выберите его из списка</div>';
+  }
 
-    if (!filtered.length) {
-      currentStudent = null;
-      studentDetails.innerHTML = '<div class="empty-state">Ничего не найдено по заданным фильтрам</div>';
+  function closeSuggestions() {
+    studentSuggestions.hidden = true;
+    studentSuggestions.replaceChildren();
+    suggestionItems = [];
+    activeSuggestionIndex = -1;
+    studentSearch.setAttribute('aria-expanded', 'false');
+    studentSearch.removeAttribute('aria-activedescendant');
+  }
+
+  function setActiveSuggestion(index) {
+    if (!suggestionItems.length) return;
+    activeSuggestionIndex = (index + suggestionItems.length) % suggestionItems.length;
+    suggestionItems.forEach((item, itemIndex) => {
+      const isActive = itemIndex === activeSuggestionIndex;
+      item.classList.toggle('active', isActive);
+      item.setAttribute('aria-selected', String(isActive));
+    });
+    const activeItem = suggestionItems[activeSuggestionIndex];
+    studentSearch.setAttribute('aria-activedescendant', activeItem.id);
+    activeItem.scrollIntoView({ block: 'nearest' });
+  }
+
+  function selectStudent(student) {
+    studentSearch.value = student.name;
+    closeSuggestions();
+    renderStudentDetails(student, { year: 'all', month: 'all', eventQuery: '' });
+  }
+
+  function renderSuggestions() {
+    const query = normalizeSearch(studentSearch.value);
+
+    if (!query) {
+      closeSuggestions();
       return;
     }
 
-    const firstFilteredStudent = filtered[0];
-    const isSameStudent = currentStudent && firstFilteredStudent.id === currentStudent.id;
+    const matches = getFilteredStudents().slice(0, MAX_SUGGESTIONS);
+    studentSuggestions.replaceChildren();
+    suggestionItems = [];
+    activeSuggestionIndex = -1;
 
-    if (isSameStudent) {
-      return;
+    if (!matches.length) {
+      const empty = document.createElement('p');
+      empty.className = 'student-suggestions-empty';
+      empty.textContent = 'Студенты не найдены';
+      studentSuggestions.appendChild(empty);
+    } else {
+      matches.forEach((student, index) => {
+        const item = document.createElement('button');
+        item.type = 'button';
+        item.id = `studentSuggestion${student.id}`;
+        item.className = 'student-suggestion';
+        item.setAttribute('role', 'option');
+        item.setAttribute('aria-selected', 'false');
+
+        const name = document.createElement('span');
+        name.className = 'student-suggestion-name';
+        name.textContent = student.name;
+        const faculty = document.createElement('span');
+        faculty.className = 'student-suggestion-faculty';
+        faculty.textContent = student.faculty;
+        item.append(name, faculty);
+
+        // mousedown, чтобы выбор сработал раньше, чем поле потеряет фокус
+        item.addEventListener('mousedown', event => event.preventDefault());
+        item.addEventListener('click', () => selectStudent(student));
+        item.addEventListener('mouseenter', () => setActiveSuggestion(index));
+
+        studentSuggestions.appendChild(item);
+        suggestionItems.push(item);
+      });
     }
 
-    const activeElement = document.activeElement;
-    renderStudentDetails(firstFilteredStudent, currentFilters);
+    studentSuggestions.hidden = false;
+    studentSearch.setAttribute('aria-expanded', 'true');
+  }
 
-    if (activeElement && activeElement.id === 'studentSearch') {
-      studentSearch.focus();
-      studentSearch.setSelectionRange(studentSearch.value.length, studentSearch.value.length);
+  function handleSearchInput() {
+    if (!studentSearch.value.trim()) {
+      showStudentPlaceholder();
     }
+    renderSuggestions();
+  }
+
+  function handleSearchKeydown(event) {
+    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+      if (studentSuggestions.hidden) {
+        renderSuggestions();
+      }
+      if (suggestionItems.length) {
+        event.preventDefault();
+        setActiveSuggestion(activeSuggestionIndex + (event.key === 'ArrowDown' ? 1 : -1));
+      }
+    } else if (event.key === 'Enter') {
+      if (!studentSuggestions.hidden && suggestionItems.length) {
+        event.preventDefault();
+        const index = activeSuggestionIndex >= 0 ? activeSuggestionIndex : 0;
+        suggestionItems[index].click();
+      }
+    } else if (event.key === 'Escape') {
+      closeSuggestions();
+    }
+  }
+
+  function handleFacultyChange() {
+    if (currentStudent && facultyFilter.value !== 'all' && currentStudent.faculty !== facultyFilter.value) {
+      studentSearch.value = '';
+      showStudentPlaceholder();
+    }
+    renderSuggestions();
   }
 
   function init() {
     renderFacultyOptions();
-    applySearch();
+    showStudentPlaceholder();
 
-    studentSearch.addEventListener('input', applySearch);
-    facultyFilter.addEventListener('change', applySearch);
+    studentSearch.addEventListener('input', handleSearchInput);
+    studentSearch.addEventListener('keydown', handleSearchKeydown);
+    studentSearch.addEventListener('focus', renderSuggestions);
+    facultyFilter.addEventListener('change', handleFacultyChange);
+    document.addEventListener('click', event => {
+      if (!event.target.closest('.student-search-wrap')) {
+        closeSuggestions();
+      }
+    });
   }
 
   init();

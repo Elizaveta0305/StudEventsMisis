@@ -13,7 +13,9 @@
     trigger.setAttribute('role', 'combobox');
     trigger.setAttribute('aria-haspopup', 'listbox');
     trigger.setAttribute('aria-expanded', 'false');
-    trigger.style.minHeight = selectStyle.minHeight;
+    if(parseFloat(selectStyle.minHeight) > 0){
+      trigger.style.minHeight = selectStyle.minHeight;
+    }
     trigger.style.width = '100%';
     const label = document.createElement('span');
     const arrow = document.createElement('span');

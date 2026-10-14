@@ -5,7 +5,7 @@
     <title>Аналитика мероприятий</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/pages/analytics.css?v=7">
+    <link rel="stylesheet" href="../css/pages/analytics.css?v=8">
     <link rel="stylesheet" href="../css/components/custom-select.css?v=3">
     <link rel="icon" type="image/x-icon" href="../assets/logo/favicon.svg">
 </head>
@@ -19,10 +19,13 @@
             </div>
 
             <section class="employee-controls" aria-label="Поиск студента">
-                <label class="search-field">
-                    <span>Студент</span>
-                    <input id="studentSearch" type="search" placeholder="Введите имя студента">
-                </label>
+                <div class="search-field student-search-field">
+                    <label for="studentSearch">Студент</label>
+                    <div class="student-search-wrap">
+                        <input id="studentSearch" type="search" placeholder="Введите имя студента" autocomplete="off" role="combobox" aria-expanded="false" aria-controls="studentSuggestions" aria-autocomplete="list">
+                        <div id="studentSuggestions" class="student-suggestions" role="listbox" hidden></div>
+                    </div>
+                </div>
                 <label class="select-field">
                     <span>Факультет</span>
                     <select id="facultyFilter">
@@ -121,7 +124,7 @@
 
     <?php include '../includes/footer.php'; ?>
 
-    <script src="../js/analytics.js?v=2"></script>
+    <script src="../js/analytics.js?v=3"></script>
     <script src="../js/analytics-dashboard.js?v=1"></script>
     <script src="../js/custom-select.js?v=3"></script>
 </body>

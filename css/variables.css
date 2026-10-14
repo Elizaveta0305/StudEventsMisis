@@ -45,6 +45,21 @@
     --radius-sm: 14px;
     --radius-md: 26px;
     --radius-lg: 36px;
+    --color-type-scientific: #3b82f6;
+    --color-type-scientific-bg: rgba(59, 130, 246, 0.12);
+    --color-type-scientific-border: rgba(59, 130, 246, 0.45);
+    --color-type-public: #f59e0b;
+    --color-type-public-bg: rgba(245, 158, 11, 0.12);
+    --color-type-public-border: rgba(245, 158, 11, 0.45);
+    --color-type-sport: #10b981;
+    --color-type-sport-bg: rgba(16, 185, 129, 0.12);
+    --color-type-sport-border: rgba(16, 185, 129, 0.45);
+    --color-type-creative: #a855f7;
+    --color-type-creative-bg: rgba(168, 85, 247, 0.12);
+    --color-type-creative-border: rgba(168, 85, 247, 0.45);
+    --color-type-city: #ef4444;
+    --color-type-city-bg: rgba(239, 68, 68, 0.12);
+    --color-type-city-border: rgba(239, 68, 68, 0.45);
 }
 
 :root.dark {
@@ -84,4 +99,19 @@
     --close-icon-filter: brightness(0) invert(1);
     --shadow: 0 10px 35px rgba(0, 0, 0, 0.35);
     --shadow-soft: 0 2px 8px rgba(15, 23, 42, 0.25);
+    --color-type-scientific: #60a5fa;
+    --color-type-scientific-bg: rgba(96, 165, 250, 0.16);
+    --color-type-scientific-border: rgba(96, 165, 250, 0.45);
+    --color-type-public: #fbbf24;
+    --color-type-public-bg: rgba(251, 191, 36, 0.16);
+    --color-type-public-border: rgba(251, 191, 36, 0.45);
+    --color-type-sport: #34d399;
+    --color-type-sport-bg: rgba(52, 211, 153, 0.16);
+    --color-type-sport-border: rgba(52, 211, 153, 0.45);
+    --color-type-creative: #c084fc;
+    --color-type-creative-bg: rgba(192, 132, 252, 0.16);
+    --color-type-creative-border: rgba(192, 132, 252, 0.45);
+    --color-type-city: #f87171;
+    --color-type-city-bg: rgba(248, 113, 113, 0.16);
+    --color-type-city-border: rgba(248, 113, 113, 0.45);
 }

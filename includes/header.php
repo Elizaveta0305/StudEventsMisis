@@ -2,8 +2,17 @@
     <header>
         <div class="header_inner">
             <a href="./calendar.php" class="logo" aria-label="Перейти в календарь">
-                <img src="../assets/logo/misis_logo.png" alt="Logo">
+                <img src="../assets/logo/misis_logo.png" alt="Logo" class="logo-light">
+                <img src="../assets/logo/misis_logo_dark.png" alt="" class="logo-dark" aria-hidden="true">
             </a>
+            
+            <!-- ДОБАВЛЕНО: Кнопка бургер-меню для мобильных устройств -->
+            <div class="nav-toggle" id="navToggle" aria-label="Открыть меню" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+
             <span class="header_links">
                 <a href="#upcomingEventsModal" id="upcomingEventsTrigger" aria-haspopup="dialog" aria-controls="upcomingEventsModal">Мероприятия</a>
                 <a href="./analytics.php">Аналитика</a>
@@ -22,7 +31,9 @@
         </div>
     </header>
 </div>
+
 <div class="upcoming-events-overlay" id="upcomingEventsOverlay"></div>
+
 <section class="upcoming-events-modal" id="upcomingEventsModal" role="dialog" aria-modal="true" aria-labelledby="upcomingEventsTitle" aria-hidden="true">
     <div class="upcoming-events-header">
         <div>
@@ -35,5 +46,7 @@
     <div class="upcoming-events-list" id="upcomingEventsList" aria-live="polite"></div>
     <a class="upcoming-events-calendar-link" href="./calendar.php">Открыть календарь</a>
 </section>
+
 <script src="../js/ui.js"></script>
 <script src="../js/upcoming-events.js"></script>
+<script src="../js/nav.js"></script>

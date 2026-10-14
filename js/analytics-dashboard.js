@@ -90,8 +90,7 @@
       { label: 'Научные', color: typeColors[0] },
       { label: 'Спортивные', color: typeColors[1] },
       { label: 'Общественные', color: typeColors[2] },
-      { label: 'Творческие', color: typeColors[3] },
-      { label: 'Городские', color: typeColors[4] }
+      { label: 'Творческие', color: typeColors[3] }
     ];
     const facultyData = {
       all: { participations: 846, activeStudents: 512, attendance: 78, types: [42, 24, 31, 18, 13] },

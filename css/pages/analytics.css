@@ -41,6 +41,71 @@
     font: inherit;
 }
 
+.student-search-wrap {
+    position: relative;
+}
+
+.student-suggestions {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    z-index: 60;
+    display: grid;
+    gap: 2px;
+    max-height: 260px;
+    overflow-y: auto;
+    padding: 6px;
+    border: 1px solid var(--color-border);
+    border-radius: 14px;
+    background: var(--color-surface-strong);
+    box-shadow: var(--shadow-soft);
+}
+
+.student-suggestions[hidden] {
+    display: none;
+}
+
+.student-suggestion {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-height: 40px;
+    padding: 8px 12px;
+    border: 0;
+    border-radius: 10px;
+    background: transparent;
+    color: var(--color-text);
+    font: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+}
+
+.student-suggestion:hover,
+.student-suggestion.active,
+.student-suggestion:focus-visible {
+    background: var(--color-surface-muted);
+    outline: none;
+}
+
+.student-suggestion-faculty {
+    flex: 0 0 auto;
+    color: var(--color-muted);
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.student-suggestions-empty {
+    margin: 0;
+    padding: 10px 12px;
+    color: var(--color-muted);
+    font-size: 13px;
+    font-weight: 600;
+}
+
 .select-field select {
     appearance: none;
     padding-right: 36px;
@@ -589,42 +654,4 @@
 .faculty-type-legend-item strong{
     color:var(--color-text);
     font-size:13px;
-}
-
-@media (max-width: 1024px) {
-    .employee-controls,
-    .student-info-grid,
-    .analytics-grid,
-    .event-types-grid,
-    .types-card-content {
-        grid-template-columns: 1fr;
-    }
-
-    .chart-card.wide {
-        grid-column: auto;
-    }
-
-    .types-card {
-        grid-column: auto;
-    }
-
-    .section-top {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-}
-
-@media (max-width: 768px) {
-    .employee-header {
-        margin-bottom: 18px;
-    }
-
-    .employee-panel {
-        padding: 18px;
-    }
-
-    .student-header {
-        flex-direction: column;
-        align-items: flex-start;
-    }
 }
