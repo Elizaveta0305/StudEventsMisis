@@ -116,8 +116,7 @@
     { key: 'Научное', label: 'Научные', color: '#0643F0' },
     { key: 'Спортивное', label: 'Спортивные', color: '#10b981' },
     { key: 'Общественное', label: 'Общественные', color: '#f59e0b' },
-    { key: 'Творческое', label: 'Творческие', color: '#a855f7' },
-    { key: 'Городское', label: 'Городские', color: '#ef4444' }
+    { key: 'Творческое', label: 'Творческие', color: '#a855f7' }
   ];
 
   const monthNames = [
@@ -383,69 +382,76 @@
     }
   }
 
-  function drawBarChart(canvas, labels, values, color) {
+  function cssVar(name, fallback) {
+    const value = getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+    return value || fallback;
+  }
+
+  function setupCanvas(canvas, fallbackWidth, fallbackHeight) {
     const ratio = window.devicePixelRatio || 1;
-    const width = canvas.clientWidth || 740;
-    const height = canvas.clientHeight || 180;
+    const width = canvas.clientWidth || fallbackWidth;
+    const height = canvas.clientHeight || fallbackHeight;
 
     canvas.width = Math.round(width * ratio);
     canvas.height = Math.round(height * ratio);
 
     const ctx = canvas.getContext('2d');
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.scale(ratio, ratio);
-
+    ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
     ctx.clearRect(0, 0, width, height);
-    ctx.fillStyle = '#f8fafc';
-    ctx.fillRect(0, 0, width, height);
 
-    const padding = 24;
-    const chartHeight = height - padding * 2;
-    const chartWidth = width - padding * 2;
+    return { ctx, width, height };
+  }
+
+  function drawBarChart(canvas, labels, values, color) {
+    const { ctx, width, height } = setupCanvas(canvas, 740, 180);
+    if (!width || !height) return;
+
+    const compact = width < 520;
+    const padding = { top: 16, right: 8, bottom: compact ? 26 : 30, left: 8 };
+    const chartWidth = width - padding.left - padding.right;
+    const chartHeight = height - padding.top - padding.bottom;
     const max = Math.max(...values, 1);
+    const slotWidth = chartWidth / values.length;
+    const barWidth = Math.min(slotWidth * 0.58, compact ? 18 : 28);
+    const labelStep = slotWidth < 34 ? 2 : 1;
 
-    ctx.strokeStyle = '#d1d5db';
+    ctx.strokeStyle = cssVar('--color-border', '#d1d5db');
     ctx.lineWidth = 1;
     ctx.beginPath();
-    ctx.moveTo(padding, padding);
-    ctx.lineTo(padding, height - padding);
-    ctx.lineTo(width - padding, height - padding);
+    ctx.moveTo(padding.left, padding.top);
+    ctx.lineTo(padding.left, padding.top + chartHeight);
+    ctx.lineTo(width - padding.right, padding.top + chartHeight);
     ctx.stroke();
 
-    const barWidth = chartWidth / values.length * 0.58;
+    ctx.fillStyle = cssVar('--color-muted', '#475569');
+    ctx.font = `${compact ? 10 : 12}px Raleway, sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'top';
 
     values.forEach((value, index) => {
-      const x = padding + index * (chartWidth / values.length) + 18;
-      const barHeight = (value / max) * chartHeight;
-      const y = height - padding - barHeight;
+      const x = padding.left + slotWidth * index + (slotWidth - barWidth) / 2;
+      const barHeight = value ? Math.max(3, (value / max) * chartHeight) : 0;
+      const y = padding.top + chartHeight - barHeight;
 
-      ctx.fillStyle = color;
-      ctx.fillRect(x, y, barWidth, barHeight);
+      if (barHeight > 0) {
+        ctx.fillStyle = color;
+        ctx.fillRect(x, y, barWidth, barHeight);
+      }
 
-      ctx.fillStyle = '#475569';
-      ctx.font = '12px Raleway';
-      ctx.textAlign = 'center';
-      ctx.fillText(labels[index], x + barWidth / 2, height - 8);
+      if (index % labelStep === 0) {
+        ctx.fillStyle = cssVar('--color-muted', '#475569');
+        ctx.fillText(labels[index], x + barWidth / 2, padding.top + chartHeight + 8);
+      }
     });
   }
 
   function drawDoughnutChart(canvas, values, colors) {
-    const ratio = window.devicePixelRatio || 1;
-    const width = canvas.clientWidth || 420;
-    const height = canvas.clientHeight || 300;
-
-    canvas.width = Math.round(width * ratio);
-    canvas.height = Math.round(height * ratio);
-
-    const ctx = canvas.getContext('2d');
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.scale(ratio, ratio);
-
-    ctx.clearRect(0, 0, width, height);
+    const { ctx, width, height } = setupCanvas(canvas, 420, 300);
+    if (!width || !height) return;
 
     const centerX = width / 2;
     const centerY = height / 2;
-    const radius = Math.min(width, height) * 0.36;
+    const radius = Math.min(width, height) * 0.4;
     const total = values.reduce((sum, value) => sum + value, 0) || 1;
 
     let startAngle = -Math.PI / 2;
@@ -467,14 +473,22 @@
 
     ctx.beginPath();
     ctx.arc(centerX, centerY, radius * 0.52, 0, Math.PI * 2);
-    ctx.fillStyle = '#f8fafc';
+    ctx.fillStyle = cssVar('--color-bg-soft', '#f8fafc');
     ctx.fill();
 
-    ctx.fillStyle = '#111827';
-    ctx.font = '700 16px Raleway';
+    ctx.fillStyle = cssVar('--color-text', '#111827');
+    ctx.font = '700 16px Raleway, sans-serif';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText(String(values.reduce((sum, value) => sum + value, 0)), centerX, centerY);
+  }
+
+  function redrawCharts() {
+    if (!currentStudent) return;
+    const yearRecords = currentFilters.year === 'all'
+      ? currentStudent.records
+      : currentStudent.records.filter(record => parseRecordDate(record.date).year === Number(currentFilters.year));
+    renderCharts(currentStudent, yearRecords, currentFilters.year);
   }
 
   function showStudentPlaceholder() {
@@ -606,6 +620,18 @@
       if (!event.target.closest('.student-search-wrap')) {
         closeSuggestions();
       }
+    });
+
+    let resizeTimer = null;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(redrawCharts, 120);
+    });
+
+    // при переключении светлой/тёмной темы цвета canvas нужно обновить
+    new MutationObserver(redrawCharts).observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class']
     });
   }
 

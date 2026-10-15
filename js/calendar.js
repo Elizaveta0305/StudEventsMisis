@@ -71,6 +71,9 @@
     card.className = 'event-card';
     card.href = `./event.php?id=${encodeURIComponent(event.id)}`;
     card.setAttribute('aria-label', `Открыть мероприятие: ${event.title || 'Мероприятие'}`);
+    if(event.type){
+      card.dataset.eventType = event.type;
+    }
     const title = document.createElement('h4');
     title.textContent = event.title || 'Мероприятие';
     card.appendChild(title);
@@ -90,6 +93,68 @@
       card.appendChild(description);
     }
     return card;
+  }
+
+  function buildMobileEventsList(year, month){
+    const wrap = document.createElement('div');
+    wrap.className = 'calendar-mobile-events';
+
+    const monthEvents = events
+      .filter(event => {
+        if(!event.date) return false;
+        if(settings.hiddenTypes.includes(event.type)) return false;
+        const [y, m] = event.date.split('-').map(Number);
+        return y === year && (m - 1) === month;
+      })
+      .sort((a, b) => a.date.localeCompare(b.date));
+
+    if(!monthEvents.length){
+      const empty = document.createElement('div');
+      empty.className = 'calendar-empty';
+      empty.textContent = 'В этом месяце мероприятий нет';
+      wrap.appendChild(empty);
+      return wrap;
+    }
+
+    const byDate = new Map();
+    monthEvents.forEach(event => {
+      if(!byDate.has(event.date)) byDate.set(event.date, []);
+      byDate.get(event.date).push(event);
+    });
+
+    [...byDate.keys()].sort().forEach(dateKey => {
+      const dayBlock = document.createElement('div');
+      dayBlock.className = 'calendar-mobile-day';
+      dayBlock.dataset.date = dateKey;
+
+      const header = document.createElement('div');
+      header.className = 'calendar-mobile-day-date';
+      const parsedDate = new Date(dateKey + 'T00:00:00');
+      header.textContent = parsedDate.toLocaleDateString('ru-RU', {
+        day: 'numeric',
+        month: 'long',
+        weekday: 'short'
+      });
+      dayBlock.appendChild(header);
+
+      const list = document.createElement('div');
+      list.className = 'calendar-mobile-day-events';
+      byDate.get(dateKey).forEach(event => list.appendChild(createEventCard(event)));
+      dayBlock.appendChild(list);
+
+      wrap.appendChild(dayBlock);
+    });
+
+    return wrap;
+  }
+
+  function scrollToMobileDay(dateKey){
+    if(!calendarContainer) return;
+    const target = calendarContainer.querySelector(`.calendar-mobile-day[data-date="${dateKey}"]`);
+    if(!target) return;
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    target.classList.add('is-highlighted');
+    window.setTimeout(() => target.classList.remove('is-highlighted'), 1600);
   }
 
   function build(){
@@ -152,6 +217,7 @@
       const cell = document.createElement('div');
       cell.className = 'calendar-day';
       const dateKey = formatDateKey(year, month, day);
+      cell.dataset.date = dateKey;
       const dateSpan = document.createElement('div');
       dateSpan.className = 'date';
       dateSpan.textContent = day;
@@ -191,6 +257,11 @@
         cell.appendChild(eventsContainer);
       }
 
+      cell.addEventListener('click', function(){
+        if(!window.matchMedia('(max-width: 760px)').matches) return;
+        scrollToMobileDay(dateKey);
+      });
+
       grid.appendChild(cell);
     }
 
@@ -207,6 +278,7 @@
     }
 
     calendarContainer.appendChild(grid);
+    calendarContainer.appendChild(buildMobileEventsList(year, month));
   }
 
   function openModal(dateValue){

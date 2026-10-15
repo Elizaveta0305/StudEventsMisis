@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <title>Аналитика мероприятий</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/pages/analytics.css?v=8">
+    <link rel="stylesheet" href="../css/style.css?v=3">
+    <link rel="stylesheet" href="../css/pages/analytics.css?v=10">
     <link rel="stylesheet" href="../css/components/custom-select.css?v=3">
     <link rel="icon" type="image/x-icon" href="../assets/logo/favicon.svg">
 </head>
@@ -124,8 +124,8 @@
 
     <?php include '../includes/footer.php'; ?>
 
-    <script src="../js/analytics.js?v=3"></script>
-    <script src="../js/analytics-dashboard.js?v=1"></script>
+    <script src="../js/analytics.js?v=5"></script>
+    <script src="../js/analytics-dashboard.js?v=2"></script>
     <script src="../js/custom-select.js?v=3"></script>
 </body>
 </html>

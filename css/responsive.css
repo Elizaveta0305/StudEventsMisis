@@ -2,13 +2,14 @@ html{
     -webkit-text-size-adjust: 100%;
     text-size-adjust: 100%;
 }
-
 .nav-toggle,
 .day-weekday,
 .calendar-empty{
     display: none;
 }
-
+.calendar-mobile-events{
+    display: none;
+}
 @media (max-width: 1024px){
     body .faculty-analytics-heading{
         flex-wrap: wrap;
@@ -17,21 +18,35 @@ html{
     body .student-analytics-charts{
         grid-template-columns: minmax(0, 1fr);
     }
+    body .faculty-analytics-kpis{
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
 }
-
+@media (max-width: 900px){
+    body .employee-controls{
+        grid-template-columns: minmax(0, 1fr) minmax(0, 0.8fr);
+    }
+}
+@media (min-width: 761px) and (max-width: 1000px){
+    body .calendar-grid{
+        min-width: 0;
+    }
+    body .calendar-day{
+        min-height: 120px;
+        padding: 6px;
+    }
+}
 @media (min-width: 601px) and (max-width: 960px){
     body .profile-events-grid{
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
-
 @media (max-width: 760px){
     body input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
     body select,
     body textarea{
         font-size: 16px !important;
     }
-
     body .title-events{
         margin: 12px 0;
         font-size: 24px;
@@ -40,7 +55,6 @@ html{
         gap: 12px;
         margin: 8px 0 16px;
     }
-
     body header{
         height: 64px;
     }
@@ -51,7 +65,6 @@ html{
         width: 92px;
         height: auto;
     }
-
     body .nav-toggle{
         display: inline-flex;
         flex-direction: column;
@@ -82,7 +95,6 @@ html{
     body .nav-toggle.open span:nth-child(3){
         transform: translateY(-7px) rotate(-45deg);
     }
-
     body .header_links{
         display: none;
         position: absolute;
@@ -107,7 +119,6 @@ html{
         border-bottom: 1px solid var(--color-border-soft);
         font-size: 16px;
     }
-
     body .user-link{
         padding: 16px 4px 6px;
         color: var(--color-muted);
@@ -127,15 +138,9 @@ html{
         transform: none;
         pointer-events: auto;
     }
-    body .user-dropdown a{
-        padding: 14px 4px;
-        font-size: 16px;
-    }
     body .user-dropdown a:last-child{
         border-bottom: 0;
     }
-
-
     body footer{
         padding: 20px 0;
     }
@@ -144,7 +149,6 @@ html{
         justify-content: center;
         gap: 8px 16px;
     }
-
     body .auth-container{
         align-items: flex-start;
         min-height: 100dvh;
@@ -173,7 +177,6 @@ html{
     body .btn-login{
         min-height: 48px;
     }
-
     body .calendar-action-btn{
         width: 100%;
         min-height: 48px;
@@ -182,7 +185,7 @@ html{
         overflow: visible;
     }
     body .calendar-header{
-        margin-bottom: 8px;
+        margin-bottom: 10px;
     }
     body .calendar-title{
         font-size: 18px;
@@ -191,99 +194,167 @@ html{
         gap: 2px;
     }
     body .calendar-nav button{
-        min-width: 44px;
-        min-height: 44px;
-        font-size: 24px;
+        min-width: 40px;
+        min-height: 40px;
+        font-size: 22px;
     }
-
     body .calendar-grid{
-        display: block;
+        display: grid;
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        gap: 2px;
         min-width: 0;
+        padding: 4px;
         border-top: 1px solid var(--cal-line);
+        border-radius: 12px;
+        background: var(--color-surface);
     }
     body .calendar-weekday{
-        display: none;
-    }
-
-    body .calendar-day:nth-child(n){
-        display: grid;
-        grid-template-columns: 52px minmax(0, 1fr);
-        grid-template-rows: auto 1fr;
-        column-gap: 12px;
-        min-height: 0;
-        padding: 14px 0;
-        border: 0;
-        border-bottom: 1px solid var(--cal-line);
-        background: transparent;
-    }
-
-    body .calendar-day.other-month:nth-child(n){
-        display: none;
-    }
-    body .calendar-day:not(.today):not(:has(.events)){
-        display: none;
-    }
-
-    body .calendar-day .date{
-        grid-column: 1;
-        grid-row: 1;
-        margin: 0 auto;
-    }
-    body .calendar-day .day-weekday{
         display: block;
-        grid-column: 1;
-        grid-row: 2;
-        margin-top: 4px;
+        padding: 6px 0;
+        border: 0;
         color: var(--color-muted);
-        font-size: 12px;
+        font-size: 11px;
         font-weight: 600;
         text-align: center;
         text-transform: uppercase;
     }
-    body .calendar-day.today .day-weekday{
-        color: var(--cal-today);
-        font-weight: 800;
+    body .calendar-day:nth-child(n){
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        min-height: 48px;
+        padding: 6px 2px 4px;
+        border: 0;
+        border-radius: 8px;
+        background: transparent;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
     }
-    body .calendar-day .events{
-        grid-column: 2;
-        grid-row: 1 / span 2;
-        margin-top: 0;
+    body .calendar-day.other-month{
+        opacity: .32;
+        pointer-events: none;
+        cursor: default;
     }
-    body .calendar-day.today:not(:has(.events))::after{
-        content: "Нет мероприятий";
-        grid-column: 2;
-        grid-row: 1 / span 2;
-        align-self: center;
-        color: var(--color-muted);
-        font-size: 14px;
+    body .calendar-day.today{
+        background: var(--color-bg-soft);
     }
-
+    body .calendar-day .date{
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 26px;
+        height: 26px;
+        margin: 0;
+        border-radius: 50%;
+        font-size: 13px;
+        font-weight: 600;
+    }
+    body .calendar-day.today .date{
+        background: var(--cal-today);
+        color: #fff;
+    }
     body .calendar-day .day-add-button{
         display: none;
     }
-
-    body .calendar-empty{
+    body .calendar-day .events{
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 3px;
+        width: 100%;
+        margin: 4px 0 0;
+    }
+    body .calendar-day .events .event-card{
         display: block;
-        padding: 36px 0;
-        color: var(--color-muted);
-        text-align: center;
+        width: 6px;
+        height: 6px;
+        min-width: 6px;
+        min-height: 6px;
+        padding: 0;
+        border: 0;
+        border-radius: 50%;
+        background: var(--color-primary);
+        box-shadow: none;
+        overflow: hidden;
+        text-indent: -9999px;
+        font-size: 0;
+        line-height: 0;
+        pointer-events: none;
     }
-
-    body .event-card{
+    body .calendar-day .events .event-card h4,
+    body .calendar-day .events .event-card p,
+    body .calendar-day .events .event-card .event-card-type,
+    body .calendar-day .events .event-card .event-card-level{
+        display: none;
+    }
+    body .calendar-day .events .event-card[data-event-type="Научное"]{
+        background: var(--color-type-scientific);
+    }
+    body .calendar-day .events .event-card[data-event-type="Общественное"]{
+        background: var(--color-type-public);
+    }
+    body .calendar-day .events .event-card[data-event-type="Спортивное"]{
+        background: var(--color-type-sport);
+    }
+    body .calendar-day .events .event-card[data-event-type="Творческое"]{
+        background: var(--color-type-creative);
+    }
+    body .calendar-day .events .event-card[data-event-type="Городское"]{
+        background: var(--color-type-city);
+    }
+    body .calendar-mobile-events{
+        display: block;
+        margin-top: 18px;
+    }
+    body .calendar-mobile-day{
+        margin: 0 -8px 16px;
+        padding: 8px;
+        border-radius: 12px;
+        scroll-margin-top: 76px;
+        transition: background-color 320ms ease;
+    }
+    body .calendar-mobile-day.is-highlighted{
+        background: var(--color-primary-soft-alt, var(--color-bg-soft));
+    }
+    body .calendar-mobile-day-date{
+        margin-bottom: 8px;
+        color: var(--color-text);
+        font-size: 14px;
+        font-weight: 700;
+        text-transform: capitalize;
+    }
+    body .calendar-mobile-day-events{
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+    body .calendar-mobile-day-events .event-card{
         padding: 12px 14px;
+        border-radius: 12px;
     }
-    body .event-card h4{
+    body .calendar-mobile-day-events .event-card h4{
         display: -webkit-box;
         -webkit-box-orient: vertical;
         -webkit-line-clamp: 2;
         font-size: 16px;
         white-space: normal;
     }
-    body .event-card p{
+    body .calendar-mobile-day-events .event-card p{
         font-size: 13px;
         white-space: normal;
     }
-
+    body .calendar-mobile-events .calendar-empty{
+        display: block;
+        padding: 28px 8px;
+        border: 1px dashed var(--color-border-soft);
+        border-radius: 12px;
+        color: var(--color-muted);
+        font-size: 14px;
+        text-align: center;
+    }
     body .event-modal{
         width: calc(100% - 16px);
         max-height: calc(100dvh - 16px);
@@ -308,7 +379,6 @@ html{
         flex: 1;
         min-height: 46px;
     }
-
     body .upcoming-events-modal{
         top: auto;
         bottom: 0;
@@ -322,7 +392,6 @@ html{
     body .upcoming-events-modal.open{
         transform: translateY(0);
     }
-
     body .profile-page{
         padding: 8px 0 24px;
     }
@@ -366,14 +435,12 @@ html{
     body .profile-link{
         padding: 14px;
     }
-
     body .profile-events{
         margin-top: 24px;
     }
     body .profile-events-title{
         font-size: 21px;
     }
-
     body .profile-event-filters{
         flex-wrap: nowrap;
         margin: 0 -15px 16px;
@@ -405,7 +472,6 @@ html{
         flex: 1 1 130px;
         min-width: 0;
     }
-
     body .student-analytics{
         margin-top: 24px;
         padding: 16px;
@@ -447,264 +513,192 @@ html{
     body .student-donut-wrap{
         max-width: 170px;
     }
-
-    body .employee-page {
-    min-width: 0;
-    padding: 12px 0 28px;
+    body .employee-page{
+        padding: 12px 0 28px;
     }
-
-    body .employee-header {
-        margin-bottom: 18px;
-    }
-
-    body .employee-title {
+    body .employee-title{
         font-size: 26px;
-        line-height: 1.2;
-        overflow-wrap: anywhere;
     }
-
-    body .employee-controls {
-        display: grid;
+    body .employee-controls{
         grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
+    }
+    body .employee-panel{
+        padding: 14px;
+    }
+    body .student-suggestions{
+        max-height: 50dvh;
+    }
+    body .student-details{
+        gap: 16px;
+    }
+    body .student-header{
+        padding-bottom: 14px;
+    }
+    body .student-profile{
         gap: 12px;
         min-width: 0;
     }
-
-    body .employee-controls > *,
-    body .student-search-wrap {
-        min-width: 0;
-        width: 100%;
-    }
-
-    body .employee-controls input,
-    body .employee-controls select,
-    body .employee-controls .custom-select-trigger {
-        max-width: 100%;
-        box-sizing: border-box;
-    }
-
-    body .employee-panel {
-        min-width: 0;
-        padding: 14px;
-        border-radius: 16px;
-    }
-
-    body .student-details {
-        min-width: 0;
-        gap: 18px;
-    }
-
-    body .student-header,
-    body .student-profile {
-        min-width: 0;
-        flex-wrap: wrap;
-    }
-
-    body .student-name {
+    body .student-avatar{
+        flex: 0 0 48px;
+        width: 48px;
+        height: 48px;
         font-size: 20px;
-        overflow-wrap: anywhere;
     }
-
-    body .student-info-grid {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    gap: 10px;
-    width: 100%;
-    min-width: 0;
+    body .student-name{
+        font-size: 20px;
     }
-
-    body .student-info-grid > * {
-        width: 100%;
-        min-width: 0;
-        max-width: 100%;
-        overflow-wrap: anywhere;
-    }
-
-    body .events-table-header {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
+    body .student-info-grid{
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 10px;
     }
-
-    body .events-table-header > * {
-        min-width: 0;
-        max-width: 100%;
+    body .student-info-grid .info-card:first-child{
+        grid-column: 1 / -1;
     }
-
-    body .events-table-header strong,
-    body .events-table-header span {
-        white-space: nowrap;
-    }
-
-    body .analytics-grid {
-        grid-template-columns: minmax(0, 1fr);
-        gap: 12px;
-    }
-
-    body .chart-card {
-        min-width: 0;
+    body .info-card{
         padding: 14px;
     }
-
-    body .chart-box {
-        min-width: 0;
+    body .analytics-grid{
+        gap: 12px;
     }
-
-    body .chart-box canvas {
-        max-width: 100%;
+    body .analytics-grid .chart-card.wide,
+    body .faculty-monthly-panel{
+        display: none;
     }
-
-    body .faculty-analytics-page {
+    body .chart-card{
+        padding: 14px;
+    }
+    body .chart-card h3,
+    body .types-visual h3{
+        font-size: 15px;
+        margin-bottom: 10px;
+    }
+    body .section-top{
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+    body .chart-box canvas{
+        height: 190px;
+    }
+    body .types-card-content{
+        grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
+        min-height: 0;
+    }
+    body .donut-box{
+        min-height: 0;
+    }
+    body .donut-box canvas{
+        width: min(240px, 100%);
+        height: 220px;
+    }
+    body .event-types-grid{
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+        min-height: 0;
+    }
+    body .event-type-item{
+        min-height: 52px;
+        padding: 8px 10px;
+        gap: 8px;
+    }
+    body .event-type-header{
         min-width: 0;
+        gap: 8px;
+        font-size: 12px;
+    }
+    body .event-type-item strong{
+        font-size: 16px;
+    }
+    body .events-table-header{
+        flex-wrap: wrap;
+        align-items: flex-start;
+    }
+    body .event-count{
+        min-height: 28px;
+        padding: 0 10px;
+        font-size: 13px;
+    }
+    body .events-table{
+        min-width: 520px;
+    }
+    body .events-table th,
+    body .events-table td{
+        padding: 12px;
+        white-space: nowrap;
+    }
+    body .events-table td:first-child{
+        min-width: 180px;
+        white-space: normal;
+    }
+    body .faculty-analytics-page{
         padding: 20px 0 32px;
     }
-
-    body .faculty-analytics-heading {
+    body .faculty-analytics-heading{
         flex-direction: column;
         align-items: stretch;
         gap: 16px;
+        margin-bottom: 16px;
     }
-
-    body .faculty-analytics-heading h2 {
+    body .faculty-analytics-heading h2{
         font-size: 24px;
-        overflow-wrap: anywhere;
     }
-
-    body .faculty-analytics-heading-meta {
+    body .faculty-analytics-heading-meta{
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 10px;
     }
-
-    body .faculty-analytics-faculty-control,
-    body .faculty-analytics-period-control {
-        min-width: 0;
-    }
-
     body .faculty-analytics-faculty-control select,
-    body .faculty-analytics-period-control select,
-    body .faculty-analytics-faculty-control .custom-select-trigger,
-    body .faculty-analytics-period-control .custom-select-trigger {
+    body .faculty-analytics-period-control select{
         width: 100%;
         min-width: 0;
-        box-sizing: border-box;
     }
-
-    body .faculty-analytics-kpis {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+    body .faculty-analytics-kpis{
         gap: 10px;
     }
-
-    body .faculty-kpi {
-        min-width: 0;
+    body .faculty-kpi{
         min-height: 104px;
         padding: 14px;
-        overflow-wrap: anywhere;
     }
-
-    body .faculty-kpi strong {
+    body .faculty-kpi strong{
         font-size: 26px;
     }
-
-    body .faculty-analytics-charts {
-        grid-template-columns: minmax(0, 1fr);
-        gap: 12px;
-    }
-
-    body .faculty-analytics-panel {
-        min-width: 0;
+    body .faculty-analytics-panel{
         padding: 14px;
     }
-
-    body .faculty-panel-heading {
-        flex-wrap: wrap;
-        gap: 10px;
-    }
-
-    body .faculty-monthly-chart-wrap {
+    body .faculty-monthly-chart-wrap{
         width: 100%;
-        height: 210px;
+        height: 220px;
         min-width: 0;
+        overflow: hidden;
     }
-
-    body .faculty-types-content {
+    body .faculty-types-content{
         grid-template-columns: minmax(0, 1fr);
-        gap: 14px;
+        justify-items: center;
+        align-items: start;
+        gap: 18px;
         min-height: 0;
     }
-
-    body .faculty-donut-wrap {
-        width: 100%;
-        max-width: 170px;
+    body .faculty-donut-wrap{
+        width: 160px;
+        max-width: 100%;
     }
-
-    body .faculty-types-legend {
+    body .faculty-types-legend{
+        grid-template-columns: minmax(0, 1fr);
+        gap: 8px;
+        width: 100%;
         min-width: 0;
     }
-
-    body .faculty-type-legend-item {
+    body .faculty-type-legend-item{
+        grid-template-columns: 10px minmax(0, 1fr) auto;
+        gap: 10px;
+        width: 100%;
+        min-width: 0;
+    }
+    body .faculty-type-legend-item span{
         min-width: 0;
         overflow-wrap: anywhere;
     }
-
-    body .events-table-wrap {
-        width: 100%;
-        max-width: 100%;
-        min-width: 0;
-        overflow-x: auto;
-        overflow-y: hidden;
-        -webkit-overflow-scrolling: touch;
-        border-radius: 16px;
-        box-sizing: border-box;
-    }
-
-    body .events-table {
-        width: 100%;
-        min-width: 560px;
-        table-layout: auto;
-        border-collapse: collapse;
-    }
-
-    body .events-table th,
-    body .events-table td {
-        padding: 12px 10px;
-        white-space: normal;
-        overflow-wrap: break-word;
-        word-break: normal;
-        vertical-align: top;
-        box-sizing: border-box;
-    }
-
-    body .events-table th {
-        white-space: normal;
-        overflow-wrap: normal;
-        word-break: normal;
-    }
-
-    body .events-table th:first-child,
-    body .events-table td:first-child {
-        min-width: 140px;
-        max-width: 190px;
-    }
-
-    body .events-table th:nth-child(2),
-    body .events-table td:nth-child(2) {
-        min-width: 115px;
-    }
-
-    body .events-table th:nth-child(3),
-    body .events-table td:nth-child(3) {
-        min-width: 105px;
-    }
-
-    body .events-table td .event-pill {
-        max-width: 100%;
-        white-space: normal;
-        overflow-wrap: anywhere;
-        text-align: center;
-    }
-
     body .settings-page{
         padding: 16px 0 28px;
     }
@@ -736,7 +730,6 @@ html{
     body .settings-type-chips{
         gap: 10px;
     }
-
     body .admin-section{
         scroll-margin-top: 12px;
     }
@@ -747,19 +740,50 @@ html{
         margin: 0 -15px 18px;
         padding: 0 15px;
     }
-
     body .event-page{
         padding: 12px 0 28px;
+    }
+    body .event-page-toolbar{
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 14px;
+    }
+    body .event-back-link{
+        min-height: 32px;
+        font-size: 12px;
+    }
+    body .event-page-actions{
+        width: auto;
+        gap: 6px;
+        justify-content: flex-end;
+    }
+    body .event-edit-button{
+        min-height: 36px;
+        padding: 0 11px;
+        font-size: 12px;
     }
     body .event-document-header h1{
         font-size: 28px;
     }
     body .event-properties{
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 0 12px;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0;
+    }
+    body .event-property{
+        padding: 14px 0;
+        gap: 6px;
+    }
+    body .event-property dt{
+        font-size: 14px;
+    }
+    body .event-property dd{
+        font-size: 17px;
     }
     body .event-property-location{
-        grid-column: 1 / -1;
+        grid-column: auto;
     }
     body .event-person-suggestions{
         max-height: 40dvh;
@@ -768,7 +792,6 @@ html{
     body .event-level-tag-editing .custom-select{
         width: 100% !important;
     }
-
     body .about-page,
     body .contacts-page{
         padding: 16px 0 24px;
@@ -793,7 +816,52 @@ html{
         min-height: 280px;
     }
 }
-
+@media (max-width: 600px){
+    body .events-table-wrap{
+        overflow: visible;
+        border: 0;
+        background: transparent;
+    }
+    body .events-table{
+        display: block;
+        min-width: 0;
+    }
+    body .events-table thead{
+        display: none;
+    }
+    body .events-table tbody{
+        display: grid;
+        gap: 10px;
+    }
+    body .events-table tr{
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 6px 12px;
+        padding: 12px 14px;
+        border: 1px solid var(--color-border-soft);
+        border-radius: 14px;
+        background: var(--color-surface-strong);
+    }
+    body .events-table td{
+        display: block;
+        padding: 0;
+        border: 0;
+        font-size: 13px;
+        color: var(--color-muted);
+        white-space: normal;
+    }
+    body .events-table td:first-child{
+        flex: 1 1 100%;
+        min-width: 0;
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--color-text);
+    }
+    body .events-table td[colspan]{
+        flex: 1 1 100%;
+    }
+}
 @media (max-width: 480px){
     body .student-analytics-kpi strong,
     body .faculty-kpi strong{
@@ -808,60 +876,37 @@ html{
     body .event-card-date{
         font-size: 15px;
     }
-    body .employee-title {
-        font-size: 23px;
-    }
+}
 
-    body .employee-panel,
-    body .faculty-analytics-panel {
-        padding: 12px;
-    }
+html,
+body{
+    max-width: 100%;
+    overflow-x: clip;
+}
+body .employee-page,
+body .employee-panel,
+body .faculty-analytics-page,
+body .events-table-wrap{
+    min-width: 0;
+    max-width: 100%;
+}
+body canvas,
+body video,
+body iframe{
+    max-width: 100%;
+}
 
-    body .student-info-grid {
-        grid-template-columns: minmax(0, 1fr);
+@media (max-width: 380px){
+    body .faculty-donut-wrap{
+        width: 140px;
     }
-
-    body .faculty-analytics-heading-meta {
-        grid-template-columns: minmax(0, 1fr);
-    }
-
-    body .faculty-kpi {
-        padding: 12px;
-    }
-
-    body .faculty-kpi > span {
-        font-size: 11px;
-    }
-
-    body .faculty-kpi strong {
-        font-size: 22px;
-    }
-
-    body .faculty-kpi small {
-        font-size: 10px;
+    body .faculty-type-legend-item{
+        padding: 10px;
+        gap: 8px;
     }
 }
-    html,
-    body {
-        max-width: 100%;
-        overflow-x: clip;
+@media (max-width: 340px){
+    body .event-types-grid{
+        grid-template-columns: minmax(0, 1fr);
     }
-
-    body * {
-        box-sizing: border-box;
-    }
-
-    body .employee-page,
-    body .employee-panel,
-    body .faculty-analytics-page,
-    body .events-table-wrap {
-        min-width: 0;
-        max-width: 100%;
-    }
-
-    body img,
-    body canvas,
-    body video,
-    body iframe {
-        max-width: 100%;
-    }
+}

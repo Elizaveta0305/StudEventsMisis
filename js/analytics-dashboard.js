@@ -2,13 +2,15 @@
   const months = ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'];
   const typeColors = ['#0643f0', '#10b981', '#f59e0b', '#a855f7', '#ef4444'];
 
-  function drawBarChart(canvas, labels, values){
+  
+  function drawBarChart(canvas, labels, values) {
     const bounds = canvas.getBoundingClientRect();
-    if(!bounds.width || !bounds.height) return;
+    if (!bounds.width || !bounds.height) return;
 
     const ratio = window.devicePixelRatio || 1;
     const width = bounds.width;
     const height = bounds.height;
+
     canvas.width = Math.round(width * ratio);
     canvas.height = Math.round(height * ratio);
 
@@ -16,31 +18,64 @@
     context.setTransform(ratio, 0, 0, ratio, 0, 0);
     context.clearRect(0, 0, width, height);
 
-    const padding = { top: 12, right: 8, bottom: 28, left: 8 };
+    const isMobile = width < 480;
+
+    const padding = {
+      top: 12,
+      right: 8,
+      bottom: isMobile ? 30 : 34,
+      left: 8
+    };
+
     const chartWidth = width - padding.left - padding.right;
     const chartHeight = height - padding.top - padding.bottom;
     const maximum = Math.max(...values, 1);
     const slotWidth = chartWidth / values.length;
-    const barWidth = Math.min(26, slotWidth * 0.58);
+    const barWidth = Math.min(isMobile ? 18 : 26, slotWidth * 0.58);
 
-    context.font = '11px Raleway, sans-serif';
-    context.textAlign = 'center';
-    context.textBaseline = 'top';
+    context.beginPath();
+    context.strokeStyle = 'rgba(148, 163, 184, 0.35)';
+    context.lineWidth = 1;
+    context.moveTo(padding.left, padding.top);
+    context.lineTo(padding.left, padding.top + chartHeight);
+    context.lineTo(width - padding.right, padding.top + chartHeight);
+    context.stroke();
 
     values.forEach((value, index) => {
-      const barHeight = value ? Math.max(3, chartHeight * value / maximum) : 0;
-      const x = padding.left + slotWidth * index + (slotWidth - barWidth) / 2;
+      const barHeight = value
+        ? Math.max(3, chartHeight * value / maximum)
+        : 0;
+
+      const x = padding.left + slotWidth * index
+        + (slotWidth - barWidth) / 2;
+
       const y = padding.top + chartHeight - barHeight;
 
-      if(barHeight){
+      if (barHeight > 0) {
         context.fillStyle = '#0643f0';
         context.beginPath();
         context.roundRect(x, y, barWidth, barHeight, [5, 5, 2, 2]);
         context.fill();
       }
 
-      context.fillStyle = '#788397';
-      context.fillText(labels[index], x + barWidth / 2, height - padding.bottom + 8);
+      if (isMobile && index % 2 !== 0) return;
+
+      context.fillStyle = '#a0aec0';
+      context.font = isMobile
+        ? '10px Raleway, sans-serif'
+        : '11px Raleway, sans-serif';
+      context.textAlign = 'center';
+      context.textBaseline = 'top';
+
+      if (width < 480 && index % 2 !== 0) {
+      return;
+        }
+
+      context.fillText(
+      labels[index],
+      x + barWidth / 2,
+      height - padding.bottom + 8
+      );
     });
   }
 
