@@ -20,13 +20,18 @@ jobs:
           DEPLOY_URL: ${{ secrets.DEPLOY_URL }}
           DEPLOY_TOKEN: ${{ secrets.DEPLOY_TOKEN }}
         run: |
-          echo "token length: ${#DEPLOY_TOKEN}"
+          UA="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36"
+
+          echo "GET with default curl UA: $(curl -s -o /dev/null -w '%{http_code}' "$DEPLOY_URL")"
+          echo "GET with browser UA:      $(curl -s -o /dev/null -w '%{http_code}' -A "$UA" "$DEPLOY_URL")"
+
           code=$(curl -sS -o /tmp/response.txt -w "%{http_code}" \
+            -A "$UA" \
             -H "X-Deploy-Token: $DEPLOY_TOKEN" \
             -F "token=$DEPLOY_TOKEN" \
             -F "bundle=@/tmp/bundle.zip" \
             "$DEPLOY_URL")
-          echo "HTTP $code"
+          echo "POST with browser UA:     $code"
           head -c 500 /tmp/response.txt
           echo
           [ "$code" = "200" ]
