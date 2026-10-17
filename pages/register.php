@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Регистрация</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/style.css?v=8">
     <link rel="icon" type="image/x-icon" href="../assets/logo/favicon.svg">
 </head>
 <body>
@@ -33,7 +33,7 @@
 
                         <label for="faculty">Факультет</label>
                         <select id="faculty" name="faculty" required>
-                            <option value="">Выберите факультет</option>
+                            <option value="" selected disabled>Выберите факультет</option>
                             <option value="it">ФАИТ</option>
                             <option value="economics">ИЭФ</option>
                             <option value="law">ФММТ</option>
@@ -51,13 +51,8 @@
                         <label for="confirm-password">Повторите пароль</label>
                         <input id="confirm-password" name="confirm_password" type="password" required>
 
-                        <label>Капча</label>
-                        <div class="captcha-placeholder">[CAPTCHA]</div>
-
-                        <div class="checkbox-row">
-                            <input id="agree" name="agree" type="checkbox">
-                            <label for="agree" class="checkbox-label">Я ознакомлен с условиями <a href="#">использования</a></label>
-                        </div>
+                        <label>Проверка</label>
+                        <div id="captcha" class="captcha"></div>
 
                         <button type="submit" class="btn-login">Зарегистрироваться</button>
                     </form>
@@ -69,6 +64,7 @@
             </div>
         </div>
     </main>
-    <script src="../js/ui.js"></script>
+    <script src="../js/ui.js?v=2"></script>
+    <script src="../js/custom-select.js?v=9"></script>
 </body>
 </html>

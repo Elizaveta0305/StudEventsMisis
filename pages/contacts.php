@@ -42,7 +42,7 @@
                     </div>
 
                     <div id="contacts-map" class="contacts-map">
-                        <div style="position:relative;overflow:hidden;width:100%;height:100%;"><a href="https://yandex.ru/maps/org/sti_nitu_misis/1070568256/?utm_medium=mapframe&utm_source=maps" style="color:#eee;font-size:12px;position:absolute;top:0px;z-index:1;"></a><a href="https://yandex.ru/maps/10649/stariy-oskol/category/university/184106140/?utm_medium=mapframe&utm_source=maps" style="color:#eee;font-size:12px;position:absolute;top:14px;z-index:1;"></a><iframe src="https://yandex.ru/map-widget/v1/org/sti_nitu_misis/1070568256/?ll=37.880536%2C51.312732&z=16" width="100%" height="100%" frameborder="0" allowfullscreen="true" style="position:relative;border-radius:12px;"></iframe></div>
+                        <iframe src="https://yandex.ru/map-widget/v1/org/sti_nitu_misis/1070568256/?ll=37.880536%2C51.312732&z=16" width="100%" height="100%" frameborder="0" allowfullscreen="true" style="position:relative;border-radius:12px; color: transparent;"></iframe>
                     </div>
                 </div>
             </section>

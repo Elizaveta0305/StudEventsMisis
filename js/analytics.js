@@ -2,8 +2,9 @@
   const students = [
     {
       id: 1,
-      name: 'Алексей Петров',
+      name: 'Алексей Петров Игоревич',
       faculty: 'ФАИТ',
+      group: 'АТ-24',
       email: 'alexey.petrov@example.com',
       activity: 82,
       events: 5,
@@ -20,6 +21,7 @@
       id: 2,
       name: 'Марина Иванова',
       faculty: 'ИЭФ',
+      group: 'Э/Ц-23',
       email: 'marina.ivanova@example.com',
       activity: 68,
       events: 4,
@@ -36,6 +38,7 @@
       id: 3,
       name: 'Дмитрий Смирнов',
       faculty: 'ФММТ',
+      group: 'МТ-21',
       email: 'dmitry.smirnov@example.com',
       activity: 54,
       events: 3,
@@ -51,6 +54,7 @@
       id: 4,
       name: 'Екатерина Белова',
       faculty: 'ФАИТ',
+      group: 'ИТ-24',
       email: 'ekaterina.belova@example.com',
       activity: 89,
       events: 6,
@@ -264,8 +268,8 @@
           <strong>${student.faculty}</strong>
         </div>
         <div class="info-card">
-          <label>Средний балл</label>
-          <strong>${student.avgScore.toFixed(1)}</strong>
+          <label>Группа</label>
+          <strong>${student.group}</strong>
         </div>
         <div class="info-card">
           <label>Участие</label>
@@ -408,15 +412,45 @@
 
     const compact = width < 520;
     const padding = { top: 16, right: 8, bottom: compact ? 26 : 30, left: 8 };
+    const max = Math.max(...values, 1);
+    const axisStep = [1, 2, 5, 10, 20, 25, 50, 100, 200, 500, 1000].find(step => max / step <= 5) || Math.ceil(max / 5);
+    const axisMax = Math.ceil(max / axisStep) * axisStep;
+    const ticks = [];
+    for (let tick = 0; tick <= axisMax; tick += axisStep) ticks.push(tick);
+
+    ctx.font = `${compact ? 10 : 12}px Raleway, sans-serif`;
+    const axisLabelWidth = Math.max(...ticks.map(tick => ctx.measureText(String(tick)).width));
+    padding.left = Math.ceil(axisLabelWidth) + 14;
+
     const chartWidth = width - padding.left - padding.right;
     const chartHeight = height - padding.top - padding.bottom;
-    const max = Math.max(...values, 1);
     const slotWidth = chartWidth / values.length;
     const barWidth = Math.min(slotWidth * 0.58, compact ? 18 : 28);
     const labelStep = slotWidth < 34 ? 2 : 1;
 
     ctx.strokeStyle = cssVar('--color-border', '#d1d5db');
     ctx.lineWidth = 1;
+
+    ctx.save();
+    ctx.globalAlpha = 0.55;
+    ticks.forEach(tick => {
+      if (!tick) return;
+      const tickY = Math.round(padding.top + chartHeight - (tick / axisMax) * chartHeight) + 0.5;
+      ctx.beginPath();
+      ctx.moveTo(padding.left, tickY);
+      ctx.lineTo(width - padding.right, tickY);
+      ctx.stroke();
+    });
+    ctx.restore();
+
+    ctx.fillStyle = cssVar('--color-muted', '#475569');
+    ctx.font = `${compact ? 10 : 12}px Raleway, sans-serif`;
+    ctx.textAlign = 'right';
+    ctx.textBaseline = 'middle';
+    ticks.forEach(tick => {
+      ctx.fillText(String(tick), padding.left - 8, padding.top + chartHeight - (tick / axisMax) * chartHeight);
+    });
+
     ctx.beginPath();
     ctx.moveTo(padding.left, padding.top);
     ctx.lineTo(padding.left, padding.top + chartHeight);
@@ -430,7 +464,7 @@
 
     values.forEach((value, index) => {
       const x = padding.left + slotWidth * index + (slotWidth - barWidth) / 2;
-      const barHeight = value ? Math.max(3, (value / max) * chartHeight) : 0;
+      const barHeight = value ? Math.max(3, (value / axisMax) * chartHeight) : 0;
       const y = padding.top + chartHeight - barHeight;
 
       if (barHeight > 0) {
@@ -628,7 +662,6 @@
       resizeTimer = setTimeout(redrawCharts, 120);
     });
 
-    // при переключении светлой/тёмной темы цвета canvas нужно обновить
     new MutationObserver(redrawCharts).observe(document.documentElement, {
       attributes: true,
       attributeFilter: ['class']

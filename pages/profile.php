@@ -193,7 +193,7 @@
     </div>
     <?php include '../includes/footer.php'; ?>
     <script src="../js/calendar.js"></script>
-    <script src="../js/analytics-dashboard.js?v=1"></script>
+    <script src="../js/analytics-dashboard.js?v=3"></script>
     <script src="../js/custom-select.js?v=3"></script>
 </body>
 </html>

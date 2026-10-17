@@ -10,7 +10,7 @@
     'Волонтёры': 'volunteers',
     'Участники': 'participants'
   };
-  const eventTypes = ['Научное', 'Общественное', 'Спортивное', 'Творческое'];
+  const eventTypes = ['Научное', 'Общественное', 'Спортивное', 'Творческое', 'Городское'];
   const eventLevels = ['Университетский', 'Городской', 'Региональный', 'Межрегиональный', 'Всероссийский'];
 
   function getEventTypeClass(type){
@@ -18,7 +18,8 @@
       'Научное': 'event-type-scientific',
       'Общественное': 'event-type-public',
       'Спортивное': 'event-type-sport',
-      'Творческое': 'event-type-creative'
+      'Творческое': 'event-type-creative',
+      'Городское': 'event-type-city'
     }[type] || '';
   }
 
@@ -45,6 +46,20 @@
       month: 'long',
       year: 'numeric'
     });
+  }
+
+  function formatFileSize(bytes){
+    if(bytes < 1024) return `${bytes} Б`;
+    const kb = bytes / 1024;
+    if(kb < 1024) return `${Math.round(kb)} КБ`;
+    return `${(kb / 1024).toFixed(1).replace('.', ',')} МБ`;
+  }
+
+  function getFileBadgeExt(filename){
+    const parts = String(filename || '').split('.');
+    const rawExt = parts.length > 1 ? parts.pop().toUpperCase() : 'FILE';
+    if(rawExt === 'DOC' || rawExt === 'DOCX' || rawExt === 'WORD') return 'W';
+    return rawExt.slice(0, 4);
   }
 
   function normalizeRoles(event){
@@ -132,6 +147,53 @@
     return control;
   }
 
+  function buildMemoHtml(event){
+    const esc = s => String(s ?? '').replace(/[&<>"']/g, c => (
+      { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]
+    ));
+
+    const roles = normalizeRoles(event);
+    const peopleHtml = Object.entries(roleLabels).map(([key, label]) => {
+      const list = (roles[key] || []).map(p =>
+        `<li>${esc(p.name)}${p.group ? ' — ' + esc(p.group) : ''}</li>`
+      ).join('');
+      return `<h3>${label}</h3><ul>${list || '<li>—</li>'}</ul>`;
+    }).join('');
+
+    const dateText = event.dateISO ? formatDate(event.dateISO) : (event.date || '—');
+
+    return `<html xmlns:o="urn:schemas-microsoft-com:office:office"
+                 xmlns:w="urn:schemas-microsoft-com:office:word"
+                 xmlns="http://www.w3.org/TR/REC-html40">
+      <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>Служебная записка</title>
+        <style>
+          body { font-family: 'Times New Roman', serif; font-size: 14pt; line-height: 1.5; }
+          h1 { text-align: center; font-size: 16pt; margin-bottom: 20pt; }
+          h2 { font-size: 14pt; margin-top: 16pt; margin-bottom: 6pt; }
+          h3 { font-size: 13pt; margin: 10pt 0 4pt; }
+          p { margin: 4pt 0; }
+          ul { margin: 4pt 0 10pt 20pt; padding: 0; }
+        </style>
+      </head>
+      <body>
+        <h1>СЛУЖЕБНАЯ ЗАПИСКА</h1>
+        <p><b>Мероприятие:</b> ${esc(event.title || '—')}</p>
+        <p><b>Тип:</b> ${esc(event.type || '—')}</p>
+        <p><b>Уровень:</b> ${esc(event.level || '—')}</p>
+        <p><b>Дата:</b> ${esc(dateText)}</p>
+        <p><b>Время:</b> ${esc(event.time || '—')}</p>
+        <p><b>Место проведения:</b> ${esc(event.location || '—')}</p>
+        <p><b>Ответственный:</b> ${esc(event.signer || '—')}</p>
+        <h2>Описание</h2>
+        <p>${esc(event.description || '—')}</p>
+        <h2>Команда мероприятия</h2>
+        ${peopleHtml}
+      </body>
+    </html>`;
+  }
+
   document.addEventListener('DOMContentLoaded', () => {
     const documentCard = document.querySelector('#eventDocument');
     if(!documentCard) return;
@@ -144,14 +206,24 @@
     }catch{
       initialEvent = {};
     }
-    const storedEvent = readEvents().find(item => item.id === eventId);
+
+    const allStoredEvents = readEvents();
+    let storedEvent = allStoredEvents.find(item => item.id === eventId);
+    if(!storedEvent && initialEvent.title){
+      storedEvent = allStoredEvents.find(item => item.title?.trim() === initialEvent.title.trim());
+    }
+
     let currentEvent = {
       ...initialEvent,
       ...storedEvent,
-      id: eventId,
+      id: storedEvent?.id || eventId,
       dateISO: storedEvent?.date || initialEvent.dateISO || ''
     };
     currentEvent.roles = normalizeRoles(storedEvent || initialEvent);
+    currentEvent.orderFile = storedEvent?.orderFile !== undefined
+      ? storedEvent.orderFile
+      : (initialEvent.orderFile || null);
+
     const directoryElement = document.querySelector('#eventStudentDirectory');
     let studentDirectory = [];
     try{
@@ -159,7 +231,7 @@
     }catch{
       studentDirectory = [];
     }
-    readEvents().forEach(event => {
+    allStoredEvents.forEach(event => {
       Object.values(normalizeRoles(event)).flat().forEach(person => studentDirectory.push(person));
     });
     Object.values(currentEvent.roles).flat().forEach(person => studentDirectory.push(person));
@@ -181,6 +253,23 @@
     const editButton = document.querySelector('#eventEditButton');
     const saveButton = document.querySelector('#eventSaveButton');
     const cancelButton = document.querySelector('#eventCancelButton');
+
+    const memoNameEl = documentCard.querySelector('[data-event-memo-name]');
+    const memoMetaEl = documentCard.querySelector('[data-event-memo-meta]');
+    const memoDownloadEl = documentCard.querySelector('[data-event-memo-download]');
+
+    const orderCard = documentCard.querySelector('[data-event-order-card]');
+    const orderExtEl = orderCard?.querySelector('[data-event-order-ext]');
+    const orderNameEl = orderCard?.querySelector('[data-event-order-name]');
+    const orderMetaEl = orderCard?.querySelector('[data-event-order-meta]');
+    const orderDownloadEl = orderCard?.querySelector('[data-event-order-download]');
+    const orderEditActions = orderCard?.querySelector('[data-order-edit-actions]');
+    const orderInput = orderCard?.querySelector('[data-event-order-input]');
+    const orderBtnText = orderCard?.querySelector('[data-event-order-btn-text]');
+    const orderRemoveBtn = orderCard?.querySelector('[data-event-order-remove]');
+
+    let draftOrderFile = null;
+
     const fields = {
       title: title,
       type: type,
@@ -191,6 +280,53 @@
       signer: signer,
       description: description
     };
+
+    function renderMemoName(eventTitle){
+      const cleanTitle = (eventTitle || 'Мероприятие').trim();
+      const memoFileName = `Служебная записка — ${cleanTitle}.doc`;
+      if(memoNameEl) memoNameEl.textContent = memoFileName;
+      if(memoDownloadEl) memoDownloadEl.setAttribute('download', memoFileName);
+    }
+
+    function renderOrderCard(orderFile, isEditing){
+      if(!orderCard) return;
+
+      if(!orderFile && !isEditing){
+        orderCard.hidden = true;
+        return;
+      }
+
+      orderCard.hidden = false;
+
+      if(orderFile){
+        if(orderExtEl) orderExtEl.textContent = orderFile.ext || getFileBadgeExt(orderFile.name);
+        if(orderNameEl) orderNameEl.textContent = orderFile.name;
+        if(orderMetaEl){
+          const status = isEditing && orderFile.isDraft
+            ? 'Новый приказ (сохраните изменения)'
+            : 'Приказ о мероприятии · Доступен для скачивания';
+          orderMetaEl.textContent = `${orderFile.size || ''} · ${status}`.replace(/^ · /, '');
+        }
+        if(orderDownloadEl){
+          orderDownloadEl.href = orderFile.url || '#';
+          orderDownloadEl.setAttribute('download', orderFile.name);
+          orderDownloadEl.hidden = isEditing;
+        }
+        if(orderBtnText) orderBtnText.textContent = 'Заменить приказ';
+        if(orderRemoveBtn) orderRemoveBtn.hidden = false;
+      }else{
+        if(orderExtEl) orderExtEl.textContent = '—';
+        if(orderNameEl) orderNameEl.textContent = 'Приказ не прикреплён';
+        if(orderMetaEl) orderMetaEl.textContent = 'Прикрепите файл приказа (PDF, DOC, DOCX), если он требуется';
+        if(orderDownloadEl) orderDownloadEl.hidden = true;
+        if(orderBtnText) orderBtnText.textContent = 'Загрузить приказ';
+        if(orderRemoveBtn) orderRemoveBtn.hidden = true;
+      }
+
+      if(orderEditActions){
+        orderEditActions.hidden = !isEditing;
+      }
+    }
 
     function renderEvent(event){
       title.textContent = event.title || 'Мероприятие';
@@ -227,6 +363,16 @@
       documentCard.querySelectorAll('[data-event-role]').forEach(roleElement => {
         renderPeople(roleElement, event.roles?.[roleElement.dataset.eventRole]);
       });
+
+      renderMemoName(event.title);
+      if(memoMetaEl){
+        memoMetaEl.textContent = 'Служебная записка · Формируется автоматически из данных мероприятия';
+      }
+      if(memoDownloadEl){
+        memoDownloadEl.hidden = false;
+      }
+
+      renderOrderCard(event.orderFile, false);
     }
 
     function setEditing(isEditing){
@@ -237,18 +383,31 @@
       descriptionEditOption.hidden = !isEditing;
 
       if(!isEditing){
+        if(orderInput) orderInput.value = '';
+        draftOrderFile = null;
         documentCard.querySelectorAll('[data-role-editor]').forEach(editor => editor.remove());
         documentCard.querySelectorAll('[data-role-list]').forEach(list => list.hidden = false);
         renderEvent(currentEvent);
         return;
       }
 
+      draftOrderFile = currentEvent.orderFile ? { ...currentEvent.orderFile, isDraft: false } : null;
+
+      renderMemoName(currentEvent.title);
+      if(memoMetaEl){
+        memoMetaEl.textContent = 'Служебная записка · Обновится автоматически при сохранении изменений';
+      }
+      if(memoDownloadEl){
+        memoDownloadEl.hidden = false;
+      }
+      renderOrderCard(draftOrderFile, true);
+
       descriptionSection.hidden = false;
       descriptionHiddenInput.checked = Boolean(currentEvent.descriptionHidden);
-      descriptionHiddenInput.addEventListener('change', () => {
+      descriptionHiddenInput.onchange = () => {
         const editor = descriptionSection.querySelector('[data-event-editor="description"]');
         if(editor) editor.disabled = descriptionHiddenInput.checked;
-      }, { once: true });
+      };
 
       const values = {
         title: currentEvent.title,
@@ -271,6 +430,11 @@
       const descriptionControl = descriptionSection.querySelector('[data-event-editor="description"]');
       descriptionControl.disabled = descriptionHiddenInput.checked;
 
+      const titleControl = documentCard.querySelector('[data-event-editor="title"]');
+      titleControl?.addEventListener('input', () => {
+        renderMemoName(titleControl.value);
+      });
+
       documentCard.querySelectorAll('[data-event-role]').forEach(roleElement => {
         const list = roleElement.querySelector('[data-role-list]');
         const role = roleElement.dataset.eventRole;
@@ -279,6 +443,58 @@
         list.after(editor);
       });
     }
+
+    memoDownloadEl?.addEventListener('click', (e) => {
+      e.preventDefault();
+
+      const filename = `Служебная записка — ${(currentEvent.title || 'Мероприятие').trim()}.doc`;
+      const blob = new Blob(['\ufeff', buildMemoHtml(currentEvent)], {
+        type: 'application/msword;charset=utf-8'
+      });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      a.style.display = 'none';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+    });
+
+    orderInput?.addEventListener('change', (e) => {
+      const file = e.target.files?.[0];
+      if(!file) return;
+
+      const ext = getFileBadgeExt(file.name);
+      const sizeStr = formatFileSize(file.size);
+
+      const applyOrderDraft = (urlValue) => {
+        draftOrderFile = {
+          name: file.name,
+          size: sizeStr,
+          ext: ext,
+          url: urlValue,
+          isDraft: true
+        };
+        renderOrderCard(draftOrderFile, true);
+      };
+
+      if(file.size <= 2.5 * 1024 * 1024){
+        const reader = new FileReader();
+        reader.onload = () => applyOrderDraft(String(reader.result));
+        reader.onerror = () => applyOrderDraft(URL.createObjectURL(file));
+        reader.readAsDataURL(file);
+      }else{
+        applyOrderDraft(URL.createObjectURL(file));
+      }
+    });
+
+    orderRemoveBtn?.addEventListener('click', () => {
+      if(orderInput) orderInput.value = '';
+      draftOrderFile = null;
+      renderOrderCard(null, true);
+    });
 
     function parsePeople(value){
       return value.split('\n').map(line => line.trim()).filter(Boolean).map(line => {
@@ -448,10 +664,15 @@
 
     function saveEvent(){
       const controls = Object.fromEntries(Object.keys(fields).map(field => [field, documentCard.querySelector(`[data-event-editor="${field}"]`)]));
+      const nextTitle = controls.title.value.trim();
+
+      let finalOrderFile = draftOrderFile ? { ...draftOrderFile } : null;
+      if(finalOrderFile) delete finalOrderFile.isDraft;
+
       const nextEvent = {
         ...currentEvent,
-        id: eventId,
-        title: controls.title.value.trim(),
+        id: currentEvent.id || eventId,
+        title: nextTitle,
         type: controls.type.value,
         level: controls.level.value,
         date: controls.date.value,
@@ -461,6 +682,7 @@
         signer: controls.signer.value.trim(),
         description: controls.description.value.trim(),
         descriptionHidden: descriptionHiddenInput.checked,
+        orderFile: finalOrderFile,
         roles: Object.fromEntries(Object.keys(roleLabels).map(role => [
           role,
           documentCard.querySelector(`[data-role-editor="${role}"]`).getPeople()
@@ -474,13 +696,25 @@
 
       try{
         const events = readEvents();
-        const existingIndex = events.findIndex(item => item.id === eventId);
+        const existingIndex = events.findIndex(item => item.id === nextEvent.id);
         if(existingIndex >= 0) events[existingIndex] = { ...events[existingIndex], ...nextEvent };
         else events.push(nextEvent);
-        localStorage.setItem(storageKey, JSON.stringify(events));
+
+        try {
+          localStorage.setItem(storageKey, JSON.stringify(events));
+        } catch {
+          if(nextEvent.orderFile?.url?.startsWith('data:')){
+            nextEvent.orderFile = { ...nextEvent.orderFile, url: '#' };
+            if(existingIndex >= 0) events[existingIndex] = { ...events[existingIndex], ...nextEvent };
+            localStorage.setItem(storageKey, JSON.stringify(events));
+          } else {
+            throw new Error('Storage quota exceeded');
+          }
+        }
+
         currentEvent = nextEvent;
         setEditing(false);
-        window.showOperationFeedback?.('success', 'Изменения мероприятия сохранены.', documentCard);
+        window.showOperationFeedback?.('success', 'Изменения сохранены. Служебная записка обновлена.', documentCard);
       }catch{
         window.showOperationFeedback?.('error', 'Не удалось сохранить изменения в этом браузере.', documentCard);
       }

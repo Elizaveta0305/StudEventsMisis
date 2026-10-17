@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Календарь мероприятий</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/style.css?v=2">
     <link rel="icon" type="image/x-icon" href="../assets/logo/favicon.svg">
 </head>
 <body>
@@ -46,7 +46,6 @@
                     <option value="Общественное">Общественное</option>
                     <option value="Спортивное">Спортивное</option>
                     <option value="Творческое">Творческое</option>
-                    <option value="Городское">Городское</option>
                 </select>
             </label>
             <label>
@@ -94,6 +93,16 @@
                 <span class="event-cover-preview" id="eventCoverPreview" hidden>
                     <img id="eventCoverPreviewImage" alt="Предпросмотр обложки мероприятия">
                     <span id="eventCoverPreviewName"></span>
+                </span>
+            </label>
+            <label class="event-field-wide">
+                Приказ о проведении мероприятия (если требуется)
+                <input type="file" id="eventOrder" name="order_file" accept=".pdf,.doc,.docx">
+                <small class="event-field-hint">PDF, DOC или DOCX, до 2,5 МБ. Служебная записка Word будет сформирована системой автоматически.</small>
+                <span class="event-order-preview" id="eventOrderPreview" hidden>
+                    <span class="event-order-preview-badge" id="eventOrderPreviewExt">PDF</span>
+                    <span class="event-order-preview-name" id="eventOrderPreviewName"></span>
+                    <button type="button" class="event-order-preview-remove" id="eventOrderPreviewRemove" aria-label="Убрать файл приказа">×</button>
                 </span>
             </label>
             <fieldset class="event-role-fields event-field-wide">
@@ -160,6 +169,6 @@
     </div>
     <script src="../js/custom-select.js?v=6"></script>
     <script src="../js/calendar-settings.js?v=1"></script>
-    <script src="../js/calendar.js?v=24"></script>
+    <script src="../js/calendar.js?v=25"></script>
 </body>
 </html>

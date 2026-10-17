@@ -79,10 +79,10 @@
                     <article class="faculty-kpi">
                         <span>Активных студентов</span>
                         <strong id="facultyActiveValue">512</strong>
-                        <small>приняли участие хотя бы раз</small>
+                        <small>приняли участие впервые</small>
                     </article>
                     <article class="faculty-kpi faculty-kpi-highlight">
-                        <span>Средняя посещаемость</span>
+                        <span>Посещаемость</span>
                         <strong id="facultyAttendanceValue">78%</strong>
                         <small>от зарегистрированных</small>
                     </article>
@@ -124,8 +124,8 @@
 
     <?php include '../includes/footer.php'; ?>
 
-    <script src="../js/analytics.js?v=5"></script>
-    <script src="../js/analytics-dashboard.js?v=2"></script>
+    <script src="../js/analytics.js?v=6"></script>
+    <script src="../js/analytics-dashboard.js?v=3"></script>
     <script src="../js/custom-select.js?v=3"></script>
 </body>
 </html>

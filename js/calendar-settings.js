@@ -1,6 +1,6 @@
 (function(){
   const storageKey = 'studEvents.calendarSettings.v1';
-  const eventTypes = ['Научное', 'Общественное', 'Спортивное', 'Творческое', 'Городское'];
+  const eventTypes = ['Научное', 'Общественное', 'Спортивное', 'Творческое'];
   const defaults = {
     weekStart: 'mon', 
     timeFormat: '24',

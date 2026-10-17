@@ -1,6 +1,4 @@
 .event-page{
-    max-width: 920px;
-    margin: 0 auto;
     padding: 28px 0 48px;
 }
 .event-page-toolbar{
@@ -203,6 +201,7 @@
     border-color:var(--color-border);
     background:var(--color-bg-soft);
     color:var(--color-text);
+    font-size: 16px;
 }
 .event-document-type.event-type-public{
     border-color:var(--color-border);
@@ -239,7 +238,7 @@
     border-radius:7px;
     background:var(--color-bg-soft);
     color:var(--color-muted);
-    font-size:12px;
+    font-size:16px;
     font-weight:800;
 }
 .event-level-tag-editing{
@@ -265,13 +264,19 @@
 .event-document-lead{
     margin: 0;
     color: var(--color-muted);
-    font-size: 14px;
+    font-size: 18px;
     margin-top: 15px;
+}
+.line-card{
+    margin-left: calc(-1 * var(--padding-card));
+    margin-right: calc(-1 * var(--padding-card));
+    border: 0;
+    border-top: 1px solid #cccccc47;
 }
 .event-properties{
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 0 20px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 370px;
     margin: 0;
     padding: 12px 0 24px;
     border-bottom: 1px solid var(--color-border-soft);
@@ -291,7 +296,7 @@
 .event-property dd{
     margin: 0;
     color: var(--color-text);
-    font-size: 14px;
+    font-size: 18px;
     font-weight: 700;
     overflow-wrap: anywhere;
 }
@@ -503,7 +508,8 @@
 }
 .event-role{
     min-width: 0;
-    padding: 15px;
+    --padding-card: 15px;
+    padding: var(--padding-card);
     border: 1px solid var(--color-border-soft);
     border-radius: 10px;
     background: var(--color-bg-soft);
@@ -515,7 +521,7 @@
     gap: 8px;
     margin: 0 0 12px;
     color: var(--color-text);
-    font-size: 13px;
+    font-size: 18px;
     font-weight: 800;
 }
 .event-role h3 span{
@@ -566,7 +572,7 @@
 }
 .event-person-details strong{
     color: var(--color-text);
-    font-size: 14px;
+    font-size: 16px;
     font-weight: 700;
     overflow-wrap: anywhere;
 }
@@ -574,6 +580,183 @@
     color: var(--color-muted);
     font-size: 12px;
 }
+.event-attachments {
+    margin-top: 28px;
+    padding-top: 26px;
+    border-top: 1px solid var(--color-border-soft);
+}
+
+.event-attachments h2 {
+    margin: 0;
+    font-size: 19px;
+    font-weight: 800;
+}
+
+.event-file-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 15px 18px;
+    border: 1px solid var(--color-border-soft);
+    border-radius: 10px;
+    background: var(--color-bg-soft);
+    transition: border-color 140ms ease;
+}
+.event-file-card[hidden] {
+    display: none !important;
+}
+
+.event-file-card:hover {
+    border-color: var(--color-border);
+}
+
+.event-file-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+}
+
+.event-file-badge {
+    display: grid;
+    width: 40px;
+    height: 40px;
+    flex: 0 0 40px;
+    place-items: center;
+    border: 1px solid var(--color-border);
+    border-radius: 9px;
+    background: var(--color-surface-strong);
+    color: var(--color-primary);
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+}
+
+.event-file-details {
+    display: grid;
+    min-width: 0;
+    gap: 3px;
+}
+
+.event-file-details strong {
+    color: var(--color-text);
+    font-size: 15px;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+}
+
+.event-file-details small {
+    color: var(--color-muted);
+    font-size: 12px;
+}
+
+.event-file-download {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex: 0 0 auto;
+    min-height: 38px;
+    padding: 0 14px;
+    border: 1px solid var(--color-border);
+    border-radius: 9px;
+    background: var(--color-surface-strong);
+    color: var(--color-text);
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 140ms ease, border-color 140ms ease, color 140ms ease;
+}
+
+.event-file-download:hover {
+    border-color: var(--color-primary-soft);
+    background: var(--color-surface-muted);
+    color: var(--color-primary);
+}
+
+.event-file-download:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+.event-document-editing .event-file-card {
+    border-style: dashed;
+    border-color: var(--color-border);
+    background: var(--color-input-bg, var(--color-bg-soft));
+}
+.event-files-list {
+    display: grid;
+    gap: 10px;
+}
+
+
+.event-document-editing [data-event-order-card] {
+    border-style: dashed;
+    border-color: var(--color-border);
+    background: var(--color-input-bg, var(--color-bg-soft));
+}
+
+.event-file-actions {
+    display: flex;
+    align-items: center;
+    flex: 0 0 auto;
+}
+
+.event-file-download[hidden],
+.event-file-edit-controls[hidden] {
+    display: none !important;
+}
+
+.event-file-edit-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.event-file-upload-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    min-height: 38px;
+    padding: 0 13px;
+    border: 1px solid var(--color-primary-soft, var(--color-border));
+    border-radius: 9px;
+    background: var(--color-surface-strong);
+    color: var(--color-primary);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 140ms ease, border-color 140ms ease;
+}
+
+.event-file-upload-btn:hover {
+    border-color: var(--color-primary);
+    background: var(--color-surface-muted);
+}
+
+.event-file-reset-btn {
+    min-height: 38px;
+    padding: 0 12px;
+    border: 1px solid var(--color-border);
+    border-radius: 9px;
+    background: transparent;
+    color: var(--color-muted);
+    font: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: color 140ms ease, border-color 140ms ease, background-color 140ms ease;
+}
+
+.event-file-reset-btn:hover {
+    border-color: var(--color-border);
+    background: var(--color-surface-muted);
+    color: var(--color-text);
+}
+
 @media(max-width: 760px){
     .event-page{
         padding-top: 20px;

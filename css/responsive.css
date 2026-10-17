@@ -46,6 +46,7 @@ html{
     body select,
     body textarea{
         font-size: 16px !important;
+        margin-top: 10px;
     }
     body .title-events{
         margin: 12px 0;
@@ -77,6 +78,9 @@ html{
         border-radius: 10px;
         cursor: pointer;
         -webkit-tap-highlight-color: transparent;
+    }
+    body .event-role h3 {
+        font-size: 18px;
     }
     body .nav-toggle span{
         display: block;
@@ -549,11 +553,17 @@ html{
         font-size: 20px;
     }
     body .student-info-grid{
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: repeat(1, minmax(0, 1fr));
         gap: 10px;
     }
     body .student-info-grid .info-card:first-child{
         grid-column: 1 / -1;
+    }
+    body .info-card label, body .info-card strong{
+        font-size: 14px;
+    }
+    body .info-card strong{
+        font-size: 18px;
     }
     body .info-card{
         padding: 14px;
@@ -570,7 +580,7 @@ html{
     }
     body .chart-card h3,
     body .types-visual h3{
-        font-size: 15px;
+        font-size: 22px;
         margin-bottom: 10px;
     }
     body .section-top{
@@ -593,7 +603,7 @@ html{
         height: 220px;
     }
     body .event-types-grid{
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: repeat(1, minmax(0, 1fr));
         gap: 8px;
         min-height: 0;
     }
@@ -605,7 +615,7 @@ html{
     body .event-type-header{
         min-width: 0;
         gap: 8px;
-        font-size: 12px;
+        font-size: 16px;
     }
     body .event-type-item strong{
         font-size: 16px;
@@ -641,7 +651,7 @@ html{
         margin-bottom: 16px;
     }
     body .faculty-analytics-heading h2{
-        font-size: 24px;
+        font-size: 26px;
     }
     body .faculty-analytics-heading-meta{
         display: grid;
@@ -652,6 +662,10 @@ html{
     body .faculty-analytics-period-control select{
         width: 100%;
         min-width: 0;
+        font-size: 16px;
+    }
+    body .faculty-analytics-faculty-control, body .faculty-analytics-period-control{
+        font-size: 14px;
     }
     body .faculty-analytics-kpis{
         gap: 10px;
@@ -659,6 +673,9 @@ html{
     body .faculty-kpi{
         min-height: 104px;
         padding: 14px;
+    }
+    body .faculty-kpi span{
+        font-size: 14px;
     }
     body .faculty-kpi strong{
         font-size: 26px;
@@ -680,7 +697,7 @@ html{
         min-height: 0;
     }
     body .faculty-donut-wrap{
-        width: 160px;
+        width: 220px;
         max-width: 100%;
     }
     body .faculty-types-legend{
@@ -691,9 +708,10 @@ html{
     }
     body .faculty-type-legend-item{
         grid-template-columns: 10px minmax(0, 1fr) auto;
-        gap: 10px;
+        gap: 15px;
         width: 100%;
         min-width: 0;
+        font-size: 18px;
     }
     body .faculty-type-legend-item span{
         min-width: 0;
@@ -788,6 +806,33 @@ html{
     body .event-person-suggestions{
         max-height: 40dvh;
     }
+    body .event-file-actions,
+    body .event-file-edit-controls {
+        width: 100%;
+    }
+    body .event-file-upload-btn {
+        flex: 1;
+        min-height: 42px;
+    }
+    body .event-file-reset-btn {
+        min-height: 42px;
+    }
+
+    body .event-attachments {
+        margin-top: 22px;
+        padding-top: 22px;
+    }
+    body .event-file-card {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+        padding: 14px;
+    }
+    body .event-file-download {
+        width: 100%;
+        min-height: 42px;
+    }
+
     body .event-document-type-editing .custom-select,
     body .event-level-tag-editing .custom-select{
         width: 100% !important;
@@ -861,11 +906,25 @@ html{
     body .events-table td[colspan]{
         flex: 1 1 100%;
     }
+    body .faculty-panel-heading p{
+        margin-bottom: 15px;
+        font-size: 14px;
+    }
+    body .faculty-panel-heading h3{
+        font-size: 22px;
+    }
+    body .select-field .custom-select-trigger{
+        font-size: 16px;
+    }
+    body .faculty-analytics-faculty-control .custom-select-trigger,
+    body .faculty-analytics-period-control .custom-select-trigger{
+        font-size: 16px;
+    }
 }
 @media (max-width: 480px){
     body .student-analytics-kpi strong,
     body .faculty-kpi strong{
-        font-size: 22px;
+        font-size: 32px;
     }
     body .faculty-analytics-heading-meta{
         grid-template-columns: minmax(0, 1fr);
@@ -898,7 +957,7 @@ body iframe{
 
 @media (max-width: 380px){
     body .faculty-donut-wrap{
-        width: 140px;
+        width: 180px;
     }
     body .faculty-type-legend-item{
         padding: 10px;

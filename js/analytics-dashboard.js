@@ -27,15 +27,43 @@
       left: 8
     };
 
+    const maximum = Math.max(...values, 1);
+    const axisStep = [1, 2, 5, 10, 20, 25, 50, 100, 200, 500, 1000].find(step => maximum / step <= 5) || Math.ceil(maximum / 5);
+    const axisMax = Math.ceil(maximum / axisStep) * axisStep;
+    const ticks = [];
+    for (let tick = 0; tick <= axisMax; tick += axisStep) ticks.push(tick);
+
+    const axisFont = isMobile ? '10px Raleway, sans-serif' : '11px Raleway, sans-serif';
+    context.font = axisFont;
+    const axisLabelWidth = Math.max(...ticks.map(tick => context.measureText(String(tick)).width));
+    padding.left = Math.ceil(axisLabelWidth) + 14;
+
     const chartWidth = width - padding.left - padding.right;
     const chartHeight = height - padding.top - padding.bottom;
-    const maximum = Math.max(...values, 1);
     const slotWidth = chartWidth / values.length;
     const barWidth = Math.min(isMobile ? 18 : 26, slotWidth * 0.58);
 
+    context.strokeStyle = 'rgba(148, 163, 184, 0.2)';
+    context.lineWidth = 1;
+    ticks.forEach(tick => {
+      if (!tick) return;
+      const tickY = Math.round(padding.top + chartHeight - chartHeight * tick / axisMax) + 0.5;
+      context.beginPath();
+      context.moveTo(padding.left, tickY);
+      context.lineTo(width - padding.right, tickY);
+      context.stroke();
+    });
+
+    context.fillStyle = '#a0aec0';
+    context.font = axisFont;
+    context.textAlign = 'right';
+    context.textBaseline = 'middle';
+    ticks.forEach(tick => {
+      context.fillText(String(tick), padding.left - 8, padding.top + chartHeight - chartHeight * tick / axisMax);
+    });
+
     context.beginPath();
     context.strokeStyle = 'rgba(148, 163, 184, 0.35)';
-    context.lineWidth = 1;
     context.moveTo(padding.left, padding.top);
     context.lineTo(padding.left, padding.top + chartHeight);
     context.lineTo(width - padding.right, padding.top + chartHeight);
@@ -43,7 +71,7 @@
 
     values.forEach((value, index) => {
       const barHeight = value
-        ? Math.max(3, chartHeight * value / maximum)
+        ? Math.max(3, chartHeight * value / axisMax)
         : 0;
 
       const x = padding.left + slotWidth * index
@@ -95,8 +123,9 @@
 
     const centerX = width / 2;
     const centerY = height / 2;
-    const radius = Math.min(width, height) * 0.42;
-    const thickness = Math.max(12, radius * 0.28);
+    const size = Math.min(width, height);
+    const thickness = Math.max(14, size * 0.15);
+    const radius = size / 2 - thickness / 2 - 2;
     const total = values.reduce((sum, value) => sum + value, 0) || 1;
     let angle = -Math.PI / 2;
 
@@ -145,7 +174,7 @@
     function update(){
       const multiplier = periodMultipliers[periodFilter.value] || 1;
       const data = facultyData[facultyFilter.value] || facultyData.all;
-      const currentTypes = data.types.map(count => Math.max(1, Math.round(count * multiplier)));
+      const currentTypes = data.types.slice(0, eventTypes.length).map(count => Math.max(1, Math.round(count * multiplier)));
       const eventTotal = currentTypes.reduce((sum, count) => sum + count, 0);
 
       document.getElementById('facultyEventsValue').textContent = eventTotal;
