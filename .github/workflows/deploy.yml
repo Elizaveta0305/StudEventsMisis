@@ -12,28 +12,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Remove files not for the server
-        run: rm -rf .git .github .gitignore README.md
-
-      - name: Install lftp
-        run: sudo apt-get update && sudo apt-get install -y lftp
-
-      - name: Upload via FTPS (lftp)
-        env:
-          FTP_SERVER: ${{ secrets.FTP_SERVER }}
-          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
-          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
-        run: |
-          lftp -u "$FTP_USERNAME","$FTP_PASSWORD" "$FTP_SERVER" <<'EOF'
-          set ftp:ssl-force true
-          set ftp:ssl-protect-data false
-          set ssl:verify-certificate no
-          set ftp:use-site-chmod false
-          set net:socket-maxseg 1000
-          set net:max-retries 10
-          set net:timeout 60
-          set net:reconnect-interval-base 10
-          set net:reconnect-interval-multiplier 1
-          mirror -R --verbose --parallel=1 --no-perms --only-newer ./ /
-          bye
-          EOF
+      - name: Deploy via FTPS
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          port: 21
+          local-dir: ./
+          server-dir: /
+          timeout: 120000
+          exclude: |
+            **/.git*
+            **/.git*/**
+            .github/**
+            README.md
+            .gitignore
