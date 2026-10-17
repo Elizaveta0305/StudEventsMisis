@@ -34,6 +34,6 @@ jobs:
           set net:timeout 60
           set net:reconnect-interval-base 10
           set net:reconnect-interval-multiplier 1
-          mirror -R --verbose --parallel=1 --no-perms --only-newer --ignore-time --size . /
+          mirror -R --verbose --parallel=1 --no-perms --only-newer ./ /
           bye
           EOF
