@@ -24,7 +24,7 @@
                 <a href="./calendar.php">Календарь</a>
                 <div class="user-menu">
                     <button type="button" class="user-link" id="userToggle">
-                        <span data-user-name><?= htmlspecialchars($studUser['name'], ENT_QUOTES, 'UTF-8') ?></span> <img src="../assets/ui/user.svg" alt="">
+                        <span data-user-name><?= htmlspecialchars(preg_replace('/^([А-ЯЁ][а-яё\-]+)\s+([А-ЯЁ])[а-яё\-]+(?:\s+([А-ЯЁ])[а-яё\-]+)?/u', '$1 $2.$3.', trim($studUser['name'] ?? '')), ENT_QUOTES, 'UTF-8') ?></span> <img src="../assets/ui/user.svg" alt="">
                     </button>
                     <div class="user-dropdown" id="userDropdown">
                         <?php if (stud_can('profile')): ?>
