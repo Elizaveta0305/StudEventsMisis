@@ -91,6 +91,8 @@
     font-weight: 700;
 }
 .event-document-header{
+    position: static;
+    z-index: auto;
     height: auto;
     padding-bottom: 28px;
     border-bottom: 1px solid var(--color-border-soft);
@@ -150,12 +152,16 @@
     filter:var(--icon-filter);
     cursor:pointer;
 }
+.info-level-card{
+    display: flex;
+    gap: 7px;
+}
 .event-document-type{
     display: inline-flex;
     align-items: center;
     gap:7px;
     min-height: 30px;
-    margin-bottom: 10px;
+    
     padding: 5px 11px;
     border: 1px solid var(--color-border);
     border-radius: 7px;
@@ -207,6 +213,7 @@
     border-color:var(--color-border);
     background:var(--color-bg-soft);
     color:var(--color-text);
+    font-size: 16px;
 }
 .event-document-type.event-type-sport{
     border-color:var(--color-border);
@@ -218,21 +225,15 @@
     background:var(--color-bg-soft);
     color:var(--color-text);
 }
-.event-document-type.event-type-city{
-    border-color:var(--color-border);
-    background:var(--color-bg-soft);
-    color:var(--color-text);
-}
 .event-document-type.event-type-scientific::before{background:#3b82f6}
 .event-document-type.event-type-public::before{background:#f59e0b}
 .event-document-type.event-type-sport::before{background:#10b981}
 .event-document-type.event-type-creative::before{background:#a855f7}
-.event-document-type.event-type-city::before{background:#ef4444}
 .event-level-tag{
     display:inline-flex;
     align-items:center;
     min-height:30px;
-    margin:0 0 10px 7px;
+    
     padding:5px 11px;
     border:1px solid var(--color-border);
     border-radius:7px;
@@ -274,19 +275,22 @@
     border-top: 1px solid #cccccc47;
 }
 .event-properties{
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0 370px;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
     margin: 0;
-    padding: 12px 0 24px;
+    padding: 16px 0 24px;
     border-bottom: 1px solid var(--color-border-soft);
 }
 .event-property{
-    display: grid;
-    align-content: start;
-    gap: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
     min-width: 0;
-    padding: 12px 0;
+    padding: 0;
 }
 .event-property dt{
     color: var(--color-muted);
@@ -568,7 +572,6 @@
 .event-person-details{
     display: grid;
     min-width: 0;
-    gap: 2px;
 }
 .event-person-details strong{
     color: var(--color-text);

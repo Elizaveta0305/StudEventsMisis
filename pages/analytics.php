@@ -1,11 +1,15 @@
+<?php
+require_once '../includes/auth.php';
+stud_require('analytics');
+?>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <title>Аналитика мероприятий</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/style.css?v=3">
-    <link rel="stylesheet" href="../css/pages/analytics.css?v=10">
+    <link rel="stylesheet" href="../css/style.css?v=4">
+    <link rel="stylesheet" href="../css/pages/analytics.css?v=11">
     <link rel="stylesheet" href="../css/components/custom-select.css?v=3">
     <link rel="icon" type="image/x-icon" href="../assets/logo/favicon.svg">
 </head>
@@ -65,11 +69,19 @@
                     </div>
                 </div>
 
+                <div class="faculty-type-filter" id="facultyTypeFilter" role="group" aria-label="Тип мероприятий">
+                    <button type="button" class="faculty-type-chip is-active" data-type="all" aria-pressed="true">Все типы<em></em></button>
+                    <button type="button" class="faculty-type-chip" data-type="science" aria-pressed="false"><i></i>Научные<em></em></button>
+                    <button type="button" class="faculty-type-chip" data-type="sport" aria-pressed="false"><i></i>Спортивные<em></em></button>
+                    <button type="button" class="faculty-type-chip" data-type="public" aria-pressed="false"><i></i>Общественные<em></em></button>
+                    <button type="button" class="faculty-type-chip" data-type="creative" aria-pressed="false"><i></i>Творческие<em></em></button>
+                </div>
+
                 <section class="faculty-analytics-kpis" aria-label="Показатели факультета">
                     <article class="faculty-kpi">
                         <span>Мероприятий</span>
-                        <strong id="facultyEventsValue">128</strong>
-                        <small>за выбранный период</small>
+                        <strong id="facultyEventsValue">115</strong>
+                        <small id="facultyEventsHint">за выбранный период</small>
                     </article>
                     <article class="faculty-kpi">
                         <span>Участий студентов</span>
@@ -95,7 +107,7 @@
                                 <h3>Активность по месяцам</h3>
                                 <p>Количество участий студентов</p>
                             </div>
-                            <span class="faculty-chart-legend"><i></i> Участия</span>
+                            <span class="faculty-chart-legend"><i id="facultyChartLegendDot"></i><span id="facultyChartLegendText">Участия</span></span>
                         </div>
                         <div class="faculty-monthly-chart-wrap">
                             <canvas id="facultyActivityChart" aria-label="График активности по месяцам"></canvas>
@@ -112,12 +124,23 @@
                         <div class="faculty-types-content">
                             <div class="faculty-donut-wrap">
                                 <canvas id="facultyTypesChart" aria-label="Диаграмма типов мероприятий"></canvas>
-                                <strong id="facultyTypesTotal">128</strong>
+                                <strong id="facultyTypesTotal">115</strong>
                             </div>
                             <div class="faculty-types-legend" id="facultyTypesLegend"></div>
                         </div>
                     </article>
                 </section>
+
+                <article class="faculty-analytics-panel faculty-breakdown-panel">
+                    <div class="faculty-panel-heading">
+                        <div>
+                            <h3>Мероприятия по факультетам</h3>
+                            <p id="facultyBreakdownSubtitle">Состав по типам за выбранный период</p>
+                        </div>
+                        <span class="faculty-breakdown-total">Всего<strong id="facultyBreakdownTotal">115</strong></span>
+                    </div>
+                    <div class="faculty-breakdown-list" id="facultyBreakdownList"></div>
+                </article>
             </section>
         </main>
     </div>
@@ -125,7 +148,7 @@
     <?php include '../includes/footer.php'; ?>
 
     <script src="../js/analytics.js?v=6"></script>
-    <script src="../js/analytics-dashboard.js?v=3"></script>
+    <script src="../js/analytics-dashboard.js?v=4"></script>
     <script src="../js/custom-select.js?v=3"></script>
 </body>
 </html>

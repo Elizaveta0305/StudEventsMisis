@@ -1,11 +1,15 @@
+<?php
+require_once '../includes/auth.php';
+stud_require('admin');
+?>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <title>Админ-панель</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../css/style.css">
-    <link rel="stylesheet" href="../css/pages/admin.css?v=10">
+    <link rel="stylesheet" href="../css/style.css?v=10">
+    <link rel="stylesheet" href="../css/pages/admin.css?v=11">
     <link rel="icon" type="image/x-icon" href="../assets/logo/favicon.svg">
 </head>
 <body>
@@ -30,146 +34,41 @@
                 <div class="admin-section-heading">
                     <div>
                         <p class="admin-section-kicker">СОБЫТИЯ</p>
-                        <h2 id="adminEventsTitle">Новое мероприятие</h2>
+                        <h2 id="adminEventsTitle">Мероприятия</h2>
                     </div>
+                    <button class="admin-button" id="adminCreateEvent" type="button">Создать мероприятие</button>
                 </div>
 
-                <div class="admin-event-management" aria-label="Управление существующими мероприятиями">
-                    <label class="admin-field">
-                        <span>Существующее мероприятие</span>
-                        <select id="adminEventSelect" name="managed_event">
-                            <option value="">Выберите мероприятие</option>
-                            <option value="event-1">Хахатон · 12 августа 2027</option>
-                            <option value="event-2">День открытых дверей · 1 сентября 2026</option>
-                            <option value="event-3">Погружение · 25 августа 2026</option>
+                <div class="admin-toolbar">
+                    <div class="admin-field admin-toolbar-search">
+                        <label class="admin-visually-hidden" for="adminEventSearch">Поиск мероприятий</label>
+                        <input type="search" id="adminEventSearch" placeholder="Поиск по названию, месту или подписанту" autocomplete="off">
+                    </div>
+                    <div class="admin-field admin-toolbar-type">
+                        <label class="admin-visually-hidden" for="adminEventTypeFilter">Тип мероприятия</label>
+                        <select id="adminEventTypeFilter">
+                            <option value="">Все типы</option>
+                            <option>Научное</option>
+                            <option>Спортивное</option>
+                            <option>Общественное</option>
+                            <option>Творческое</option>
                         </select>
-                    </label>
-                    <div class="admin-event-management-actions">
-                        <button class="admin-button admin-button-secondary" id="adminNewEvent" type="button">Новое мероприятие</button>
-                        <button class="admin-button admin-button-secondary" id="adminEditEvent" type="button" disabled>Редактировать</button>
-                        <button class="admin-button admin-button-danger" id="adminDeleteEvent" type="button" disabled>Удалить</button>
+                    </div>
+                    <div class="admin-segmented" role="group" aria-label="Период">
+                        <button type="button" class="is-active" data-period="upcoming" aria-pressed="true">Предстоящие <span class="admin-segmented-count" data-count="upcoming"></span></button>
+                        <button type="button" data-period="past" aria-pressed="false">Прошедшие <span class="admin-segmented-count" data-count="past"></span></button>
+                        <button type="button" data-period="all" aria-pressed="false">Все <span class="admin-segmented-count" data-count="all"></span></button>
                     </div>
                 </div>
 
-                <form class="admin-form" id="adminEventForm" aria-label="Данные мероприятия">
-                    <div class="admin-form-grid">
-                        <label class="admin-field admin-field-wide">
-                            <span>Название мероприятия</span>
-                            <input type="text" name="event_name" placeholder="Например, День открытых дверей" required>
-                        </label>
+                <p class="admin-list-summary" id="adminEventsSummary" role="status" aria-live="polite"></p>
+                <ul class="admin-event-list" id="adminEventList"></ul>
 
-                        <label class="admin-field">
-                            <span>Тип мероприятия</span>
-                            <select name="event_type" required>
-                                <option value="" selected disabled>Выберите тип</option>
-                                <option>Научное</option>
-                                <option>Спортивное</option>
-                                <option>Общественное</option>
-                                <option>Творческое</option>
-                                <option>Городское</option>
-                            </select>
-                        </label>
-                        <label class="admin-field">
-                            <span>Уровень мероприятия</span>
-                            <select name="event_level" required>
-                                <option value="" selected disabled>Выберите уровень</option>
-                                <option value="Университетский">Университетский</option>
-                                <option value="Городской">Городской</option>
-                                <option value="Региональный">Региональный</option>
-                                <option value="Межрегиональный">Межрегиональный</option>
-                                <option value="Всероссийский">Всероссийский</option>
-                            </select>
-                        </label>
-                        <label class="admin-field">
-                            <span>Место проведения</span>
-                            <input type="text" name="event_location" placeholder="Корпус, аудитория или адрес">
-                        </label>
-                        <label class="admin-field">
-                            <span>Кто подписывает служебные записки</span>
-                            <input type="text" name="event_signer" placeholder="ФИО ответственного за мероприятие">
-                        </label>
-
-                        <label class="admin-field">
-                            <span>Дата</span>
-                            <input type="date" name="event_date" required>
-                        </label>
-                        <label class="admin-field">
-                            <span>Время начала</span>
-                            <input type="time" name="event_time">
-                        </label>
-
-                        <label class="admin-field admin-field-wide">
-                            <span>Описание</span>
-                            <textarea name="event_description" rows="3" placeholder="Краткая информация о мероприятии"></textarea>
-                        </label>
-                        <label class="admin-description-toggle admin-field-wide">
-                            <input type="checkbox" name="event_description_hidden" value="1">
-                            <span>Не добавлять описание мероприятия</span>
-                        </label>
-
-                        <div class="admin-field">
-                            <span id="assignedStudentsLabel">Закреплённые студенты</span>
-                            <div class="admin-people-picker" data-admin-people-picker data-field-name="students[]">
-                                <div class="admin-picker-control">
-                                    <input class="admin-picker-search" type="search" placeholder="Найти студента" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="assignedStudentsOptions" aria-labelledby="assignedStudentsLabel">
-                                    <button class="admin-picker-toggle" type="button" aria-label="Открыть список студентов" tabindex="-1"><span aria-hidden="true"></span></button>
-                                </div>
-                                <div class="admin-picker-menu" hidden>
-                                    <div class="admin-picker-list" id="assignedStudentsOptions" role="listbox" aria-multiselectable="true">
-                                        <button class="admin-picker-option" type="button" role="option" aria-selected="false" data-value="student-1" data-search="Александра Иванова ИТ-23">Александра Иванова · ЭТ-23</button>
-                                        <button class="admin-picker-option" type="button" role="option" aria-selected="false" data-value="student-2" data-search="Михаил Петров ИТ-22">Михаил Петров · ИТ-22</button>
-                                        <button class="admin-picker-option" type="button" role="option" aria-selected="false" data-value="student-3" data-search="Елизавета Розенко ИТ-23">Елизавета Розенко · АТ-23</button>
-                                        <button class="admin-picker-option" type="button" role="option" aria-selected="false" data-value="student-4" data-search="Даниил Смирнов ЭК-21">Даниил Смирнов · Э/Ц-24</button>
-                                        <button class="admin-picker-option" type="button" role="option" aria-selected="false" data-value="student-5" data-search="Мария Кузнецова ИТ-22">Мария Кузнецова · ИТ-23</button>
-                                    </div>
-                                    <p class="admin-picker-empty" hidden>Ничего не найдено</p>
-                                </div>
-                                <div class="admin-picker-selected" aria-live="polite" hidden></div>
-                            </div>
-                        </div>
-                        <div class="admin-field">
-                            <span id="assignedStaffLabel">Ответственные сотрудники</span>
-                            <div class="admin-people-picker" data-admin-people-picker data-field-name="staff[]">
-                                <div class="admin-picker-control">
-                                    <input class="admin-picker-search" type="search" placeholder="Найти сотрудника" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="assignedStaffOptions" aria-labelledby="assignedStaffLabel">
-                                    <button class="admin-picker-toggle" type="button" aria-label="Открыть список сотрудников" tabindex="-1"><span aria-hidden="true"></span></button>
-                                </div>
-                                <div class="admin-picker-menu" hidden>
-                                    <div class="admin-picker-list" id="assignedStaffOptions" role="listbox" aria-multiselectable="true">
-                                        <button class="admin-picker-option" type="button" role="option" aria-selected="false" data-value="staff-1" data-search="Анна Сергеевна ФАИТ">Анна Мартынова · УВР</button>
-                                        <button class="admin-picker-option" type="button" role="option" aria-selected="false" data-value="staff-2" data-search="Игорь Викторович Студенческий отдел">Натьлья Викторовна · ИЭФ</button>
-                                        <button class="admin-picker-option" type="button" role="option" aria-selected="false" data-value="staff-3" data-search="Ольга Андреевна ФММТ">Анатолий Иванович · ФММТ</button>
-                                        <button class="admin-picker-option" type="button" role="option" aria-selected="false" data-value="staff-4" data-search="Дмитрий Павлович ИЭФ">Ольга Александровна · ИЭФ</button>
-                                        <button class="admin-picker-option" type="button" role="option" aria-selected="false" data-value="staff-5" data-search="Наталья Ивановна ФАИТ">Нелли Ковтун · ФАИТ</button>
-                                    </div>
-                                    <p class="admin-picker-empty" hidden>Ничего не найдено</p>
-                                </div>
-                                <div class="admin-picker-selected" aria-live="polite" hidden></div>
-                            </div>
-                        </div>
-
-                        <label class="admin-field admin-field-wide">
-                            <span>Приказ или документ мероприятия</span>
-                            <input class="admin-file-input" type="file" name="event_document" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
-                            <small class="admin-document-hint" id="adminDocumentHint">При редактировании можно выбрать новый файл, чтобы заменить текущий.</small>
-                        </label>
-
-                        <div class="admin-field admin-field-wide">
-                            <label for="adminEventCover">Обложка мероприятия</label>
-                            <input class="admin-file-input" id="adminEventCover" type="file" name="event_cover" accept="image/jpeg,image/png,image/webp">
-                            <small class="admin-document-hint" id="adminCoverHint">Горизонтальное изображение будет размещено во всю ширину страницы мероприятия.</small>
-                            <div class="admin-cover-preview" id="adminCoverPreview" hidden>
-                                <img id="adminCoverPreviewImage" alt="Предпросмотр обложки мероприятия">
-                                <button class="admin-button admin-button-secondary" id="adminRemoveCover" type="button">Убрать обложку</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="admin-form-actions">
-                        <span class="admin-event-form-status" id="adminEventStatus" role="status" aria-live="polite">Заполните поля, чтобы создать мероприятие.</span>
-                        <button class="admin-button" id="adminEventSubmit" type="submit">Создать мероприятие</button>
-                    </div>
-                </form>
+                <div class="admin-empty" id="adminEventsEmpty" hidden>
+                    <strong id="adminEmptyTitle"></strong>
+                    <p id="adminEmptyText"></p>
+                    <div class="admin-empty-actions" id="adminEmptyActions"></div>
+                </div>
             </section>
 
             <section class="admin-section" id="students" aria-labelledby="adminStudentsTitle">
@@ -193,10 +92,6 @@
                         <label class="admin-field">
                             <span>Отчество</span>
                             <input type="text" name="patronymic">
-                        </label>
-                        <label class="admin-field">
-                            <span>Номер студенческого билета</span>
-                            <input type="text" name="student_id" required>
                         </label>
                         <label class="admin-field">
                             <span>Факультет</span>
@@ -282,8 +177,144 @@
         </main>
     </div>
 
+    <div class="admin-drawer-overlay" id="adminDrawerOverlay"></div>
+    <aside class="admin-drawer" id="adminDrawer" role="dialog" aria-modal="true" aria-labelledby="adminDrawerTitle" aria-hidden="true">
+        <form class="admin-drawer-form" id="adminEventForm" novalidate>
+            <div class="admin-drawer-header">
+                <div>
+                    <p class="admin-section-kicker" id="adminDrawerKicker">НОВОЕ МЕРОПРИЯТИЕ</p>
+                    <h2 id="adminDrawerTitle">Создание мероприятия</h2>
+                </div>
+                <button class="admin-drawer-close" id="adminDrawerClose" type="button" aria-label="Закрыть форму">&times;</button>
+            </div>
+
+            <div class="admin-drawer-body">
+                <fieldset class="admin-fieldset">
+                    <legend>Основное</legend>
+                    <div class="admin-form-grid">
+                        <div class="admin-field admin-field-wide" data-field="title">
+                            <label for="adminEventTitle">Название <span class="admin-required" aria-hidden="true">*</span></label>
+                            <input type="text" id="adminEventTitle" name="event_title" placeholder="Например, День открытых дверей" maxlength="140" autocomplete="off">
+                            <small class="admin-field-error" data-error-for="title" hidden></small>
+                        </div>
+                        <div class="admin-field" data-field="type">
+                            <label for="adminEventType">Тип <span class="admin-required" aria-hidden="true">*</span></label>
+                            <select id="adminEventType" name="event_type">
+                                <option value="" selected disabled>Выберите тип</option>
+                                <option>Научное</option>
+                                <option>Спортивное</option>
+                                <option>Общественное</option>
+                                <option>Творческое</option>
+                            </select>
+                            <small class="admin-field-error" data-error-for="type" hidden></small>
+                        </div>
+                        <div class="admin-field" data-field="level">
+                            <label for="adminEventLevel">Уровень <span class="admin-required" aria-hidden="true">*</span></label>
+                            <select id="adminEventLevel" name="event_level">
+                                <option value="" selected disabled>Выберите уровень</option>
+                                <option value="Университетский">Университетский</option>
+                                <option value="Городской">Городской</option>
+                                <option value="Региональный">Региональный</option>
+                                <option value="Межрегиональный">Межрегиональный</option>
+                                <option value="Всероссийский">Всероссийский</option>
+                            </select>
+                            <small class="admin-field-error" data-error-for="level" hidden></small>
+                        </div>
+                        <div class="admin-field admin-field-wide">
+                            <label for="adminEventDescription">Описание</label>
+                            <textarea id="adminEventDescription" name="event_description" rows="3" placeholder="Краткая информация о мероприятии"></textarea>
+                            <label class="admin-description-toggle">
+                                <input type="checkbox" name="event_description_hidden" value="1">
+                                <span>Не показывать описание на странице мероприятия</span>
+                            </label>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset class="admin-fieldset">
+                    <legend>Дата и место</legend>
+                    <div class="admin-form-grid">
+                        <div class="admin-field" data-field="date">
+                            <label for="adminEventDate">Дата <span class="admin-required" aria-hidden="true">*</span></label>
+                            <input type="date" id="adminEventDate" name="event_date">
+                            <small class="admin-field-error" data-error-for="date" hidden></small>
+                            <small class="admin-document-hint" id="adminDateHint" hidden></small>
+                        </div>
+                        <div class="admin-field">
+                            <label for="adminEventTime">Время начала</label>
+                            <input type="time" id="adminEventTime" name="event_time">
+                        </div>
+                        <div class="admin-field">
+                            <label for="adminEventLocation">Место проведения</label>
+                            <input type="text" id="adminEventLocation" name="event_location" placeholder="Корпус, аудитория или адрес" autocomplete="off">
+                        </div>
+                        <div class="admin-field">
+                            <label for="adminEventSigner">Кто подписывает служебные записки</label>
+                            <input type="text" id="adminEventSigner" name="event_signer" list="adminSignerList" placeholder="ФИО ответственного" autocomplete="off">
+                            <datalist id="adminSignerList"></datalist>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset class="admin-fieldset">
+                    <legend>Студенты и сотрудники</legend>
+                    <div class="admin-form-grid">
+                        <div class="admin-field">
+                            <span id="adminOrganizersLabel">Организаторы</span>
+                            <div data-people-role="organizers" data-label-id="adminOrganizersLabel" data-placeholder="Найти студента"></div>
+                        </div>
+                        <div class="admin-field">
+                            <span id="adminVolunteersLabel">Волонтёры</span>
+                            <div data-people-role="volunteers" data-label-id="adminVolunteersLabel" data-placeholder="Найти студента"></div>
+                        </div>
+                        <div class="admin-field">
+                            <span id="adminParticipantsLabel">Участники</span>
+                            <div data-people-role="participants" data-label-id="adminParticipantsLabel" data-placeholder="Найти студента"></div>
+                        </div>
+                        <div class="admin-field">
+                            <span id="adminStaffLabel">Ответственные сотрудники</span>
+                            <div data-people-role="staff" data-label-id="adminStaffLabel" data-placeholder="Найти сотрудника"></div>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset class="admin-fieldset">
+                    <legend>Материалы</legend>
+                    <div class="admin-form-grid">
+                        <div class="admin-field admin-field-wide">
+                            <label for="adminEventOrder">Приказ или документ мероприятия</label>
+                            <input class="admin-file-input" id="adminEventOrder" type="file" name="event_order" accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document">
+                            <div class="admin-file-chip" id="adminOrderChip" hidden>
+                                <span class="admin-file-badge" id="adminOrderExt">PDF</span>
+                                <span class="admin-file-name" id="adminOrderName"></span>
+                                <button class="admin-chip-button" id="adminOrderRemove" type="button">Убрать</button>
+                            </div>
+                            <small class="admin-document-hint" id="adminOrderHint">PDF, DOC или DOCX, не больше 2,5 МБ.</small>
+                        </div>
+                        <div class="admin-field admin-field-wide">
+                            <label for="adminEventCover">Обложка мероприятия</label>
+                            <input class="admin-file-input" id="adminEventCover" type="file" name="event_cover" accept="image/jpeg,image/png,image/webp">
+                            <div class="admin-cover-preview" id="adminCoverPreview" hidden>
+                                <img id="adminCoverPreviewImage" alt="Предпросмотр обложки мероприятия">
+                                <button class="admin-chip-button" id="adminRemoveCover" type="button">Убрать обложку</button>
+                            </div>
+                            <small class="admin-document-hint" id="adminCoverHint">JPG, PNG или WebP до 1,5 МБ. Горизонтальное изображение размещается во всю ширину страницы мероприятия.</small>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <div class="admin-drawer-footer">
+                <button class="admin-button admin-button-danger-outline" id="adminDrawerDelete" type="button" hidden>Удалить</button>
+                <span class="admin-event-form-status" id="adminEventStatus" role="status" aria-live="polite"></span>
+                <button class="admin-button admin-button-secondary" id="adminDrawerCancel" type="button">Отмена</button>
+                <button class="admin-button" id="adminEventSubmit" type="submit">Создать мероприятие</button>
+            </div>
+        </form>
+    </aside>
+
     <?php include '../includes/footer.php'; ?>
     <script src="../js/custom-select.js?v=4"></script>
-    <script src="../js/admin.js?v=9"></script>
+    <script src="../js/admin.js?v=10"></script>
 </body>
 </html>

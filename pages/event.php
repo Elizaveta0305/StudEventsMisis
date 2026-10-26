@@ -1,4 +1,5 @@
 <?php
+require_once '../includes/auth.php';
 $events = [
     'event-1' => [
         'title' => 'Хахакмекфест 2027',
@@ -8,7 +9,7 @@ $events = [
         'dateISO' => '2027-08-12',
         'time' => '14:00',
         'location' => 'Главный корпус МИСИС',
-        'signer' => 'Анна Сергеевна Мартынова',
+        'signer' => 'Анна Михайловна Мартынова',
         'cover' => '',
         'description' => 'Хакатон для студентов и школьников. Участники объединяются в команды, чтобы за один день разработать и представить собственные проекты.',
         'students' => [
@@ -122,11 +123,13 @@ $orderFile = $event['orderFile'] ?? null;
         <main class="event-page">
             <div class="event-page-toolbar">
                 <a class="event-back-link" href="../pages/calendar.php">← Вернуться в календарь</a>
-                <div class="event-page-actions">
-                    <button class="event-edit-button" id="eventEditButton" type="button">Редактировать</button>
-                    <button class="event-edit-button event-edit-save" id="eventSaveButton" type="button" hidden>Сохранить</button>
-                    <button class="event-edit-button event-edit-cancel" id="eventCancelButton" type="button" hidden>Отмена</button>
-                </div>
+                <?php if (stud_can('edit_event')): ?>
+                    <div class="event-page-actions">
+                        <button class="event-edit-button" id="eventEditButton" type="button">Редактировать</button>
+                        <button class="event-edit-button event-edit-save" id="eventSaveButton" type="button" hidden>Сохранить</button>
+                        <button class="event-edit-button event-edit-cancel" id="eventCancelButton" type="button" hidden>Отмена</button>
+                    </div>
+                <?php endif; ?>
             </div>
 
             <article class="event-document" id="eventDocument" data-event-id="<?= htmlspecialchars($eventId, ENT_QUOTES, 'UTF-8') ?>">
@@ -141,9 +144,10 @@ $orderFile = $event['orderFile'] ?? null;
                 </div>
                 <header class="event-document-header">
                     <h1 data-event-title><?= htmlspecialchars($event['title'], ENT_QUOTES, 'UTF-8') ?></h1>
-                    <div class="event-document-type" data-event-type><?= htmlspecialchars($event['type'], ENT_QUOTES, 'UTF-8') ?></div>
-                    <div class="event-level-tag" data-event-level><?= htmlspecialchars($event['level'], ENT_QUOTES, 'UTF-8') ?></div>
-                    <p class="event-document-lead">Информация о мероприятии и закреплённых студентах</p>
+                        <div class="info-level-card">
+                            <div class="event-document-type" data-event-type><?= htmlspecialchars($event['type'], ENT_QUOTES, 'UTF-8') ?></div>
+                            <div class="event-level-tag" data-event-level><?= htmlspecialchars($event['level'], ENT_QUOTES, 'UTF-8') ?></div> 
+                        </div>
                 </header>
 
                 <dl class="event-properties" aria-label="Параметры мероприятия">

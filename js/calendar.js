@@ -8,6 +8,10 @@
     'Мария Кузнецова'
   ];
 
+  function can(permission){
+    return Boolean(window.StudAuth && window.StudAuth.can(permission));
+  }
+
   let events = loadEvents();
 
   events.forEach(event => {
@@ -90,7 +94,7 @@
     card.setAttribute('aria-label', `Открыть мероприятие: ${event.title || 'Мероприятие'}`);
     card.dataset.eventId = event.id;
 
-    if(event.date && event.date >= getTodayKey()){
+    if(can('edit_event') && event.date && event.date >= getTodayKey()){
       card.dataset.draggable = 'true';
     }
 
@@ -120,7 +124,55 @@
       card.appendChild(description);
     }
 
+    if(can('delete_event')){
+      const remove = document.createElement('button');
+      remove.type = 'button';
+      remove.className = 'event-card-delete';
+      remove.setAttribute('aria-label', `Удалить мероприятие: ${event.title || 'Мероприятие'}`);
+      remove.title = 'Удалить мероприятие';
+      remove.textContent = '\u00d7';
+
+      remove.addEventListener('click', clickEvent => {
+        clickEvent.preventDefault();
+        clickEvent.stopPropagation();
+        deleteEvent(event.id);
+      });
+
+      card.appendChild(remove);
+    }
+
     return card;
+  }
+
+  async function deleteEvent(id){
+    if(!can('delete_event')) return;
+
+    const index = events.findIndex(event => event.id === id);
+    if(index < 0) return;
+
+    const target = events[index];
+    const confirmed = await window.StudDialog.confirm({
+      title: 'Удалить мероприятие?',
+      text: `Мероприятие «${target.title || 'Мероприятие'}» будет удалено из календаря. Это действие нельзя отменить.`,
+      confirmLabel: 'Удалить'
+    });
+
+    if(!confirmed) return;
+
+    const currentIndex = events.findIndex(event => event.id === id);
+    if(currentIndex < 0) return;
+
+    const [removed] = events.splice(currentIndex, 1);
+
+    if(!persistEvents()){
+      events.splice(currentIndex, 0, removed);
+      window.showOperationFeedback?.('error', 'Не удалось удалить мероприятие в этом браузере.');
+      return;
+    }
+
+    window.dispatchEvent(new CustomEvent('studEvents:updated'));
+    build();
+    window.showOperationFeedback?.('success', 'Мероприятие удалено.');
   }
 
   function buildMobileEventsList(year, month){
@@ -310,7 +362,7 @@
       });
 
       cell.appendChild(dateSpan);
-      cell.appendChild(addButton);
+      if(can('create_event')) cell.appendChild(addButton);
 
       const dayEvents = events.filter(event => event.date === dateKey && !settings.hiddenTypes.includes(event.type));
 
@@ -351,6 +403,7 @@
   }
 
   function openModal(dateValue){
+    if(!can('create_event')) return;
     const overlay = document.getElementById('modalOverlay');
     const modal = document.getElementById('eventModal');
     const dateInput = document.getElementById('eventDate');
@@ -389,6 +442,7 @@
   }
 
   function moveEvent(id, dateKey){
+    if(!can('edit_event')) return false;
     const index = events.findIndex(event => event.id === id);
     if(index < 0) return false;
 
@@ -565,7 +619,7 @@
     calendarContainer.addEventListener('pointerdown', event => {
       if(drag || mobileQuery.matches) return;
       if(event.pointerType === 'mouse' && event.button !== 0) return;
-
+      if(event.target.closest('.event-card-delete')) return;
       const card = event.target.closest('.calendar-day .event-card[data-draggable="true"]');
       if(!card || !calendarContainer.contains(card)) return;
 
@@ -638,6 +692,7 @@
     moveEvent,
 
     addEvent(event){
+      if(!can('create_event')) return null;
       const savedEvent = {
         ...event,
         id: event.id || `calendar-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`

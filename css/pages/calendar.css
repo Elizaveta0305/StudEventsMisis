@@ -57,7 +57,7 @@
 }
 .calendar-nav button{
     appearance:none;
-    border:none;
+    border: 1px solid;
     border-radius:6px;
     background:transparent;
     color: var(--color-muted);
@@ -802,4 +802,53 @@
 @keyframes event-card-dropped{
     0%{ box-shadow:0 0 0 0 var(--color-primary); transform:scale(1.03); }
     100%{ box-shadow:0 0 0 8px transparent; transform:scale(1); }
+}
+.event-card{
+    position:relative;
+}
+.event-card-delete{
+    appearance:none;
+    position:absolute;
+    top:6px;
+    right:6px;
+    width:22px;
+    height:22px;
+    display:grid;
+    place-items:center;
+    padding:0;
+    border:1px solid var(--color-border);
+    border-radius:50%;
+    background:var(--color-surface-strong);
+    color:var(--color-text-muted);
+    font-size:16px;
+    line-height:1;
+    cursor:pointer;
+    opacity:0;
+    transition:opacity 140ms ease, background-color 140ms ease, color 140ms ease, border-color 140ms ease;
+}
+.event-card:hover .event-card-delete,
+.event-card:focus-within .event-card-delete,
+.event-card-delete:focus-visible{
+    opacity:1;
+}
+.event-card-delete:hover,
+.event-card-delete:focus-visible{
+    border-color:var(--color-error-border);
+    background:var(--color-error-bg);
+    color:var(--color-error);
+}
+.event-card-delete:focus-visible{
+    outline:2px solid var(--color-error);
+    outline-offset:1px;
+}
+.event-card.event-card-ghost .event-card-delete{
+    display:none;
+}
+@media (hover: none){
+    .event-card-delete{
+        opacity:1;
+    }
+}
+.event-card:has(.event-card-delete) h4{
+    padding-right:26px;
 }

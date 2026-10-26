@@ -89,8 +89,7 @@
       'Научное': 'event-type-scientific',
       'Общественное': 'event-type-public',
       'Спортивное': 'event-type-sport',
-      'Творческое': 'event-type-creative',
-      'Городское': 'event-type-city'
+      'Творческое': 'event-type-creative'
     }[type] || '';
   }
 

@@ -10,7 +10,7 @@
     'Волонтёры': 'volunteers',
     'Участники': 'participants'
   };
-  const eventTypes = ['Научное', 'Общественное', 'Спортивное', 'Творческое', 'Городское'];
+  const eventTypes = ['Научное', 'Общественное', 'Спортивное', 'Творческое'];
   const eventLevels = ['Университетский', 'Городской', 'Региональный', 'Межрегиональный', 'Всероссийский'];
 
   function getEventTypeClass(type){
@@ -18,8 +18,7 @@
       'Научное': 'event-type-scientific',
       'Общественное': 'event-type-public',
       'Спортивное': 'event-type-sport',
-      'Творческое': 'event-type-creative',
-      'Городское': 'event-type-city'
+      'Творческое': 'event-type-creative'
     }[type] || '';
   }
 
@@ -720,9 +719,11 @@
       }
     }
 
-    editButton.addEventListener('click', () => setEditing(true));
-    cancelButton.addEventListener('click', () => setEditing(false));
-    saveButton.addEventListener('click', saveEvent);
+    if(editButton && cancelButton && saveButton){
+        editButton.addEventListener('click', () => setEditing(true));
+        cancelButton.addEventListener('click', () => setEditing(false));
+        saveButton.addEventListener('click', saveEvent);
+    }
     renderEvent(currentEvent);
   });
 })();

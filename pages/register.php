@@ -28,9 +28,6 @@
                         <label for="patronymic">Отчество</label>
                         <input id="patronymic" name="patronymic" type="text">
 
-                        <label for="student-id">Номер студенческого билета</label>
-                        <input id="student-id" name="student_id" type="text" required>
-
                         <label for="faculty">Факультет</label>
                         <select id="faculty" name="faculty" required>
                             <option value="" selected disabled>Выберите факультет</option>
@@ -41,6 +38,18 @@
 
                         <label for="group">Группа</label>
                         <input id="group" name="group" type="text" required>
+
+                        <div class="date-field">
+                        <label for="birth-date">Дата рождения</label>
+                            <div class="date-input-wrap">
+                                <input id="birth-date" class="date-input-custom" name="birth_date" type="date" required>
+                                <button type="button" class="date-trigger" aria-label="Открыть календарь"></button>
+                            </div>
+                        </div>
+
+                        <label for="phone">Номер телефона</label>
+                        <input id="phone" name="phone" type="tel" placeholder="+7 (___) ___-__-__" maxlength="18" required>
+
 
                         <label for="register-login">Логин</label>
                         <input id="register-login" name="register_login" type="text" required>

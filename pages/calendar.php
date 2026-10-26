@@ -13,7 +13,9 @@
         <main>
             <div class="title-events-row">
                 <div class="title-events">Календарь мероприятий</div>
-                <button type="button" id="addEventButton" class="calendar-action-btn">Создать мероприятие</button>
+                <?php if (stud_can('create_event')): ?>
+                    <button type="button" id="addEventButton" class="calendar-action-btn">Создать мероприятие</button>
+                <?php endif; ?>
             </div>
             <div class="calendar-wrap">
                 <div id="simple-calendar" class="calendar"></div>

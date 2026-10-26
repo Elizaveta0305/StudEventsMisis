@@ -641,15 +641,39 @@
 }
 .faculty-types-legend{
     display:grid;
-    gap:35px;
+    gap:14px;
 }
 .faculty-type-legend-item{
+    appearance:none;
     display:grid;
     grid-template-columns:11px minmax(0,1fr) auto;
     align-items:center;
     gap:10px;
+    width:100%;
+    padding:10px 12px;
+    border:1px solid transparent;
+    border-radius:12px;
+    background:none;
     color:var(--color-muted);
+    font:inherit;
     font-size:14px;
+    text-align:left;
+    cursor:pointer;
+    transition:opacity 180ms ease,background-color 180ms ease,border-color 180ms ease;
+}
+.faculty-type-legend-item:hover{
+    background:var(--color-bg-soft);
+}
+.faculty-type-legend-item:focus-visible{
+    outline:2px solid var(--color-primary);
+    outline-offset:2px;
+}
+.faculty-type-legend-item.is-active{
+    border-color:var(--color-border);
+    background:var(--color-bg-soft);
+}
+.faculty-types-legend.has-active .faculty-type-legend-item:not(.is-active){
+    opacity:.45;
 }
 .faculty-type-legend-item i{
     width:11px;
@@ -659,6 +683,118 @@
 .faculty-type-legend-item strong{
     color:var(--color-text);
     font-size:16px;
+}
+
+.faculty-type-filter{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-bottom:16px;
+}
+.faculty-type-chip{
+    appearance:none;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    min-height:40px;
+    padding:0 8px 0 14px;
+    border:1px solid var(--color-border);
+    border-radius:999px;
+    background:var(--color-surface-strong);
+    color:var(--color-text);
+    font:inherit;
+    font-size:14px;
+    font-weight:700;
+    cursor:pointer;
+    transition:background-color 180ms ease,border-color 180ms ease;
+}
+.faculty-type-chip i{
+    width:9px;
+    height:9px;
+    border-radius:50%;
+    background:var(--chip-color,var(--color-muted));
+}
+.faculty-type-chip em{
+    min-width:26px;
+    padding:2px 8px;
+    border-radius:999px;
+    background:var(--color-bg-soft);
+    color:var(--color-muted);
+    font-size:12px;
+    font-style:normal;
+    text-align:center;
+}
+.faculty-type-chip:hover{
+    border-color:var(--chip-color,var(--color-primary));
+}
+.faculty-type-chip:focus-visible{
+    outline:2px solid var(--color-primary);
+    outline-offset:2px;
+}
+.faculty-type-chip.is-active{
+    border-color:var(--chip-color,var(--color-primary));
+    background:color-mix(in srgb,var(--chip-color,var(--color-primary)) 12%,var(--color-surface-strong));
+}
+.faculty-type-chip.is-active em{
+    background:var(--chip-color,var(--color-primary));
+    color:#fff;
+}
+.faculty-breakdown-total{
+    display:inline-flex;
+    align-items:baseline;
+    gap:8px;
+    color:var(--color-muted);
+    font-size:14px;
+    font-weight:700;
+    white-space:nowrap;
+}
+.faculty-breakdown-total strong{
+    color:var(--color-text);
+    font-size:24px;
+}
+.faculty-breakdown-list{
+    display:grid;
+    gap:16px;
+    margin-top:20px;
+}
+.faculty-breakdown-row{
+    display:grid;
+    grid-template-columns:64px minmax(0,1fr) 40px 48px;
+    align-items:center;
+    gap:14px;
+    transition:opacity 180ms ease;
+}
+.faculty-breakdown-list.has-selection .faculty-breakdown-row:not(.is-selected){
+    opacity:.4;
+}
+.faculty-breakdown-name{
+    color:var(--color-text);
+    font-size:15px;
+    font-weight:800;
+}
+.faculty-breakdown-track{
+    display:flex;
+    height:14px;
+    overflow:hidden;
+    border:1px solid var(--color-border-soft);
+    border-radius:999px;
+    background:var(--color-bg-soft);
+}
+.faculty-breakdown-track i{
+    display:block;
+    height:100%;
+    box-shadow:inset -2px 0 0 var(--color-surface-strong);
+}
+.faculty-breakdown-row strong{
+    color:var(--color-text);
+    font-size:18px;
+    text-align:right;
+}
+.faculty-breakdown-row small{
+    color:var(--color-muted);
+    font-size:13px;
+    font-weight:700;
+    text-align:right;
 }
 
 .student-details > *,
